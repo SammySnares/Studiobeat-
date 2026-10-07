@@ -605,8 +605,7 @@ async function record(){
 
       let url = URL.createObjectURL(blob);
 
-      let player =
-        document.createElement("div");
+      let player = document.createElement("div");
 
       player.className = "card";
 
@@ -616,17 +615,24 @@ async function record(){
           <span>My Vocal</span>
         </div>
 
-        <button id="playVocal">▶ PLAY VOCAL</button>
-        <button id="stopVocal">⏹ STOP</button>
-        <button id="deleteVocal">🗑️ DELETE</button>
+        <button id="playVocal">
+          ▶ PLAY VOCAL
+        </button>
+
+        <button id="stopVocal">
+          ⏹ STOP
+        </button>
+
+        <button id="deleteVocal">
+          🗑️ DELETE
+        </button>
       `;
 
       document
         .querySelector(".studio")
         .appendChild(player);
 
-      let vocal =
-        new Audio(url);
+      let vocal = new Audio(url);
 
       document.getElementById("playVocal").onclick = () => {
         vocal.currentTime = 0;
@@ -650,7 +656,8 @@ async function record(){
 
       recording = false;
 
-      render();
+      document.getElementById("rec").textContent =
+        "● RECORD VOCALS";
 
     };
 
