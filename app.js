@@ -575,47 +575,80 @@ function stop(){
 async function record(){
 
   if(recording){
-
     media.stop();
-
     return;
-
   }
 
   try{
 
-    let stream=
-      await navigator.mediaDevices
-      .getUserMedia({audio:true});
+    let stream =
+      await navigator.mediaDevices.getUserMedia({
+        audio:true
+      });
 
-    media=new MediaRecorder(stream);
+    media = new MediaRecorder(stream);
 
-    chunks=[];
+    chunks = [];
 
-    media.ondataavailable=e=>{
-      chunks.push(e.data);
+    media.ondataavailable = e => {
+      if(e.data.size > 0){
+        chunks.push(e.data);
+      }
     };
 
-    media.onstop=()=>{
+    media.onstop = () => {
 
-      let blob=new Blob(
+      let blob = new Blob(
         chunks,
         {type:"audio/webm"}
       );
 
-      let a=document.createElement("a");
+      let url = URL.createObjectURL(blob);
 
-      a.href=URL.createObjectURL(blob);
+      let player =
+        document.createElement("div");
 
-      a.download="StudioBeat-vocal.webm";
+      player.className = "card";
 
-      a.click();
+      player.innerHTML = `
+        <div class="title">
+          🎙️ VOCAL RECORDING
+          <span>My Vocal</span>
+        </div>
+
+        <button id="playVocal">▶ PLAY VOCAL</button>
+        <button id="stopVocal">⏹ STOP</button>
+        <button id="deleteVocal">🗑️ DELETE</button>
+      `;
+
+      document
+        .querySelector(".studio")
+        .appendChild(player);
+
+      let vocal =
+        new Audio(url);
+
+      document.getElementById("playVocal").onclick = () => {
+        vocal.currentTime = 0;
+        vocal.play();
+      };
+
+      document.getElementById("stopVocal").onclick = () => {
+        vocal.pause();
+        vocal.currentTime = 0;
+      };
+
+      document.getElementById("deleteVocal").onclick = () => {
+        vocal.pause();
+        URL.revokeObjectURL(url);
+        player.remove();
+      };
 
       stream.getTracks().forEach(
-        t=>t.stop()
+        t => t.stop()
       );
 
-      recording=false;
+      recording = false;
 
       render();
 
@@ -623,7 +656,7 @@ async function record(){
 
     media.start();
 
-    recording=true;
+    recording = true;
 
     render();
 
