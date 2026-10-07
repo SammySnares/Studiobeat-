@@ -1,6 +1,6 @@
 
   const app = document.getElementById("app");
-  if (!app) return;
+  
 
   /* =========================================================
      STUDIOBEAT — BLACK & WHITE MOBILE DAW
