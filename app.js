@@ -60,25 +60,125 @@ function ctx(){
   return audio;
 }
 
-function hit(n){
+async function hit(n){
   if(muted[n]) return;
 
-  let c=ctx();
+  let c=await ctx();
+
+  if(n==="Kick"){
+    let o=c.createOscillator();
+    let g=c.createGain();
+
+    o.type="sine";
+    o.frequency.setValueAtTime(150,c.currentTime);
+    o.frequency.exponentialRampToValueAtTime(45,c.currentTime+0.18);
+
+    g.gain.setValueAtTime(
+      0.9*volumes[n]*masterVolume,
+      c.currentTime
+    );
+
+    g.gain.exponentialRampToValueAtTime(
+      .001,
+      c.currentTime+0.25
+    );
+
+    o.connect(g).connect(c.destination);
+    o.start();
+    o.stop(c.currentTime+0.25);
+    return;
+  }
+
+  if(n==="Snare"){
+    let buffer=c.createBuffer(
+      1,
+      c.sampleRate*0.2,
+      c.sampleRate
+    );
+
+    let data=buffer.getChannelData(0);
+
+    for(let i=0;i<data.length;i++){
+      data[i]=(Math.random()*2-1)*(1-i/data.length);
+    }
+
+    let noise=c.createBufferSource();
+    let filter=c.createBiquadFilter();
+    let g=c.createGain();
+
+    noise.buffer=buffer;
+
+    filter.type="highpass";
+    filter.frequency.value=1200;
+
+    g.gain.setValueAtTime(
+      .6*volumes[n]*masterVolume,
+      c.currentTime
+    );
+
+    g.gain.exponentialRampToValueAtTime(
+      .001,
+      c.currentTime+0.2
+    );
+
+    noise.connect(filter).connect(g).connect(c.destination);
+    noise.start();
+
+    return;
+  }
+
+  if(n==="Hi-Hat"){
+    let buffer=c.createBuffer(
+      1,
+      c.sampleRate*0.08,
+      c.sampleRate
+    );
+
+    let data=buffer.getChannelData(0);
+
+    for(let i=0;i<data.length;i++){
+      data[i]=Math.random()*2-1;
+    }
+
+    let noise=c.createBufferSource();
+    let filter=c.createBiquadFilter();
+    let g=c.createGain();
+
+    noise.buffer=buffer;
+
+    filter.type="highpass";
+    filter.frequency.value=5000;
+
+    g.gain.setValueAtTime(
+      .25*volumes[n]*masterVolume,
+      c.currentTime
+    );
+
+    g.gain.exponentialRampToValueAtTime(
+      .001,
+      c.currentTime+0.08
+    );
+
+    noise.connect(filter).connect(g).connect(c.destination);
+    noise.start();
+
+    return;
+  }
+
   let s=sounds[n];
 
   let o=c.createOscillator();
   let g=c.createGain();
 
-  o.type=
-    n==="Hi-Hat" ? "square" :
-    n==="Snare" ? "triangle" :
-    "sine";
-
+  o.type="sine";
   o.frequency.value=s[0];
 
   let volume=volumes[n]*masterVolume;
 
-  g.gain.setValueAtTime(.0001,c.currentTime);
+  g.gain.setValueAtTime(
+    .0001,
+    c.currentTime
+  );
 
   g.gain.exponentialRampToValueAtTime(
     Math.max(.001,volume),
@@ -95,7 +195,6 @@ function hit(n){
   o.start();
   o.stop(c.currentTime+s[1]+.02);
 }
-
 function render(){
 
 app.innerHTML=`
