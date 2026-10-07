@@ -389,11 +389,11 @@ TRACKS
 
 <div class="actions">
 
-<button>＋ INSTRUMENT</button>
+<button id="addInstrument">＋ INSTRUMENT</button>
 
-<button>＋ SAMPLE</button>
+<button id="addSample">＋ SAMPLE</button>
 
-<button>🎤 VOCAL PRESET</button>
+<button id="vocalPreset">🎤 VOCAL PRESET</button>
 
 </div>
 
