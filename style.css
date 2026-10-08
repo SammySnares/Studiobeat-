@@ -1,16 +1,402 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#000000">
-  <title>StudioBeat</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+* {
+  box-sizing: border-box;
+}
 
-<body>
-  <div id="app"></div>
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  background: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
 
-  <script src="app.js"></script>
-</body>
-</html>
+body {
+  overflow-x: hidden;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+#app {
+  width: 100%;
+  min-height: 100vh;
+  background: #000;
+}
+
+.sb {
+  width: 100%;
+  min-height: 100vh;
+  background: #000;
+  color: #fff;
+}
+
+.sb-top {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 14px;
+  border-bottom: 1px solid #333;
+  background: #000;
+}
+
+.brand {
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.brand span {
+  font-weight: 400;
+}
+
+.project-name {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+}
+
+.transport {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+button {
+  background: #111;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+button:active,
+button.selected,
+button.active {
+  background: #fff;
+  color: #000;
+}
+
+.transport input {
+  width: 60px;
+  background: #111;
+  color: #fff;
+  border: 1px solid #444;
+  padding: 7px;
+}
+
+.transport label {
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.recording {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+main {
+  width: 100%;
+}
+
+.panel {
+  display: none;
+  padding: 14px;
+}
+
+.panel.show {
+  display: block;
+}
+
+.panel-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #333;
+}
+
+.timeline-scroll,
+.keyboard-scroll {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.timeline {
+  position: relative;
+  min-width: 2200px;
+}
+
+.ruler,
+.track {
+  display: flex;
+  min-height: 70px;
+}
+
+.ruler {
+  border-bottom: 1px solid #333;
+}
+
+.ruler > div {
+  width: 64px;
+  min-width: 64px;
+  padding: 8px;
+  border-right: 1px solid #222;
+  font-size: 11px;
+}
+
+.ruler .track-name {
+  width: 130px;
+  min-width: 130px;
+}
+
+.track {
+  border-bottom: 1px solid #333;
+}
+
+.track-info {
+  width: 130px;
+  min-width: 130px;
+  padding: 8px;
+  border-right: 1px solid #333;
+}
+
+.track-info small {
+  display: block;
+  color: #aaa;
+  margin: 4px 0;
+}
+
+.lane {
+  position: relative;
+  display: flex;
+}
+
+.lane i {
+  display: block;
+  width: 64px;
+  min-width: 64px;
+  border-right: 1px solid #222;
+}
+
+.clip {
+  position: absolute;
+  top: 10px;
+  height: 50px;
+  background: #fff;
+  color: #000;
+  border-radius: 5px;
+  padding: 12px;
+  font-size: 12px;
+  overflow: hidden;
+}
+
+#playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #fff;
+  pointer-events: none;
+}
+
+.arrangement-buttons,
+.piano-tools,
+.fx-buttons,
+.effects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.categories,
+.loop-packs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+}
+
+.instrument-grid,
+.looper-grid,
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.instrument,
+.loop-cell,
+.tool-grid button {
+  min-height: 70px;
+  text-align: left;
+}
+
+.instrument small,
+.loop-cell small {
+  display: block;
+  color: #aaa;
+  margin-top: 5px;
+}
+
+.keyboard {
+  position: relative;
+  width: 910px;
+  height: 280px;
+  background: #111;
+}
+
+.white-key {
+  position: relative;
+  display: inline-block;
+  width: 65px;
+  height: 280px;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 0 0 5px 5px;
+}
+
+.white-key:active {
+  background: #aaa;
+}
+
+.black-key {
+  position: absolute;
+  top: 0;
+  width: 38px;
+  height: 175px;
+  background: #000;
+  border: 1px solid #555;
+  z-index: 2;
+  border-radius: 0 0 5px 5px;
+}
+
+.black-key:active {
+  background: #444;
+}
+
+.recording-box {
+  max-width: 700px;
+  margin: auto;
+}
+
+.big-record {
+  width: 100%;
+  min-height: 70px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.input-meter {
+  height: 10px;
+  background: #222;
+  margin: 20px 0;
+}
+
+.mixer {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+}
+
+.channel {
+  min-width: 180px;
+  padding: 15px;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+.channel small {
+  display: block;
+  color: #aaa;
+  margin: 5px 0 15px;
+}
+
+.channel label {
+  display: block;
+  margin: 15px 0;
+  font-size: 11px;
+}
+
+.channel input {
+  width: 100%;
+}
+
+.recording-file {
+  margin-top: 15px;
+  padding: 12px;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+.recording-file audio {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.recording-file a {
+  color: #fff;
+}
+
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 8px;
+  background: #000;
+  border-top: 1px solid #333;
+  z-index: 20;
+}
+
+.bottom-nav button {
+  border: 0;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+}
+
+.bottom-nav button.active {
+  background: #fff;
+  color: #000;
+}
+
+@media (max-width: 700px) {
+  .sb-top {
+    flex-wrap: wrap;
+  }
+
+  .project-name {
+    order: 3;
+    width: 100%;
+    flex-basis: 100%;
+  }
+
+  .transport {
+    margin-left: auto;
+  }
+
+  .instrument-grid,
+  .looper-grid,
+  .tool-grid {
+    grid-template-columns: 1fr;
+  }
+}
