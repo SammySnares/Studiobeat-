@@ -4,221 +4,190 @@
   const app = document.getElementById("app");
   if (!app) return;
 
-  /* =========================================================
-     STUDIOBEAT — BANDLAB-STYLE MOBILE STUDIO
-     BLACK + WHITE ONLY
-     ========================================================= */
+  const instruments = [
+    ["Piano","keys"],["Grand Piano","keys"],["Bright Piano","keys"],
+    ["Electric Piano","keys"],["Warm EP","keys"],["Honky Piano","keys"],
+    ["Organ","keys"],["Jazz Organ","keys"],["Church Organ","keys"],
+    ["Clavinet","keys"],["R&B Keys","keys"],["Soul Keys","keys"],
+    ["Lo-fi Keys","keys"],["Trap Keys","keys"],["Afro Piano","keys"],
+    ["Drill Piano","keys"],
 
-  /* ---------- STYLE ---------- */
+    ["Acoustic Guitar","guitar"],["Nylon Guitar","guitar"],
+    ["Electric Guitar","guitar"],["Clean Guitar","guitar"],
+    ["Muted Guitar","guitar"],["Bass Guitar","bass"],["808 Bass","bass"],
+    ["Sub Bass","bass"],["Slap Bass","bass"],["Fretless Bass","bass"],
+    ["Afro Bass","bass"],["Drill 808","bass"],
 
-  if (!document.getElementById("studiobeat-new-style")) {
-    const style = document.createElement("style");
-    style.id = "studiobeat-new-style";
+    ["Violin","strings"],["Viola","strings"],["Cello","strings"],
+    ["Contrabass","strings"],["String Ensemble","strings"],
+    ["Cinematic Strings","strings"],
 
-    style.textContent = `
-      *{
-        box-sizing:border-box;
-      }
+    ["Trumpet","brass"],["Trombone","brass"],["Saxophone","brass"],
+    ["French Horn","brass"],["Brass Section","brass"],
 
-      html,body{
-        margin:0;
-        padding:0;
-        width:100%;
-        min-height:100%;
-        background:#000;
-        color:#fff;
-        font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      }
+    ["Flute","woodwind"],["Clarinet","woodwind"],["Oboe","woodwind"],
+    ["Recorder","woodwind"],["Pan Flute","woodwind"],
 
-      body{
-        overflow:hidden;
-      }
+    ["Marimba","mallet"],["Vibraphone","mallet"],["Xylophone","mallet"],
+    ["Kalimba","mallet"],["Steel Drums","mallet"],["Celesta","mallet"],
+    ["Music Box","mallet"],["Glockenspiel","mallet"],
 
-      button,input{
-        font:inherit;
-      }
+    ["Acoustic Kit","drums"],["Studio Kit","drums"],["808 Kit","drums"],
+    ["Afro Kit","drums"],["Percussion","drums"],["Kick","drums"],
+    ["Deep Kick","drums"],["Snare","drums"],["Closed Hat","drums"],
+    ["Open Hat","drums"],["Crash","drums"],["Ride","drums"],
+    ["Tom","drums"],["Floor Tom","drums"],
 
-      button{
-        color:#fff;
-        background:#111;
-        border:1px solid #333;
-        border-radius:12px;
-        cursor:pointer;
-        touch-action:manipulation;
-      }
+    ["Talking Drum","african"],["Talking Drum High","african"],
+    ["Talking Drum Low","african"],["Djembe","african"],
+    ["Djembe High","african"],["Djembe Low","african"],
+    ["Conga","african"],["Bongo","african"],["Shekere","african"],
+    ["African Bell","african"],["African Percussion","african"],
+    ["Amapiano Log Drum","african"],["Log Drum Deep","african"],
+    ["Log Drum High","african"],
 
-      button:active{
-        transform:scale(.97);
-        background:#222;
-      }
+    ["Lead Saw","synth"],["Lead Square","synth"],["Lead Pulse","synth"],
+    ["Synth Brass","synth"],["Synth Bass","synth"],["Warm Pad","synth"],
+    ["Dark Pad","synth"],["Choir Pad","synth"],["Air Pad","synth"],
+    ["Dream Pad","synth"],["Pluck","synth"],["Digital Pluck","synth"],
+    ["Bell Pluck","synth"],["Afro Pluck","synth"],["Trap Pluck","synth"],
+    ["Synth Lead","synth"],["Retro Lead","synth"],["Vapor Lead","synth"],
+    ["House Lead","synth"],["Amapiano Lead","synth"],["Vintage Synth","synth"],
+    ["Analog Bass","synth"],["Mono Synth","synth"],["Poly Synth","synth"],
 
-      #app{
-        width:100%;
-        height:100vh;
-        height:100dvh;
-      }
+    ["Choir","vocal"],["Male Choir","vocal"],["Female Choir","vocal"],
+    ["Vocal Ah","vocal"],["Vocal Oo","vocal"],
 
-      .sb-app{
-        width:100%;
-        height:100%;
-        background:#000;
-        color:#fff;
-        display:flex;
-        flex-direction:column;
-        overflow:hidden;
-      }
+    ["Harp","other"],["Acoustic Harp","other"],["Banjo","other"],
+    ["Mandolin","other"],["Ukulele","other"],["Bell","other"],
+    ["Church Bells","other"],["Crystal Bell","other"],["Cowbell","other"],
+    ["Agogo","other"],["Guiro","other"],["Cabasa","other"],
+    ["Tambourine","other"],["Woodblock","other"],["Rimshot","other"],
+    ["Clap","other"],["Snap","other"],["Cajon","other"],["Timbale","other"],
 
-      .sb-header{
-        min-height:70px;
-        padding:14px 16px;
-        padding-top:max(14px,env(safe-area-inset-top));
-        border-bottom:1px solid #222;
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:10px;
-      }
+    ["Breath","fx"],["Atmosphere","fx"],["Impact","fx"],["Reverse FX","fx"],
+    ["Vinyl FX","fx"],["Tape Stop FX","fx"],["Riser","fx"],
+    ["Downlifter","fx"],["Sub Drop","fx"]
+  ];
 
-      .sb-brand{
-        font-size:20px;
-        font-weight:900;
-        letter-spacing:1px;
-      }
+  const categories = [
+    "all","keys","guitar","bass","strings","brass","woodwind",
+    "mallet","drums","african","synth","vocal","other","fx"
+  ];
 
-      .sb-subtitle{
-        color:#999;
-        font-size:12px;
-      }
+  const genres = [
+    "Afrobeats","Amapiano","Trap","Drill","Hip-Hop","R&B",
+    "Pop","Dancehall","Reggae","Gospel","EDM","House","Lo-fi"
+  ];
 
-      .sb-back{
-        width:44px;
-        height:44px;
-        border-radius:50%;
-        font-size:22px;
-        flex:none;
-      }
+  let audio = null;
+  let master = null;
 
-      .sb-screen{
-        flex:1;
-        overflow:auto;
-        padding:16px;
-        padding-bottom:110px;
-      }
+  let bpm = 105;
+  let playing = false;
+  let timer = null;
+  let beat = 0;
 
-      .sb-title{
-        font-size:28px;
-        font-weight:900;
-        margin:4px 0 5px;
-      }
+  let selected = "Piano";
+  let category = "all";
+  let activeTab = "arrange";
+  let octave = 4;
 
-      .sb-muted{
-        color:#888;
-        font-size:13px;
-      }
+  let tracks = [
+    {
+      name: "Track 1",
+      instrument: "Piano",
+      type: "MIDI"
+    }
+  ];
 
-      .project-card{
-        margin-top:20px;
-        padding:18px;
-        border:1px solid #333;
-        border-radius:18px;
-        background:#0c0c0c;
-      }
+  let clips = [];
 
-      .project-card h2{
-        margin:0 0 6px;
-        font-size:21px;
-      }
+  let recorder = null;
+  let recording = false;
+  let chunks = [];
 
-      .project-card p{
-        margin:0;
-        color:#888;
-        font-size:13px;
-      }
+  function audioStart() {
+    if (!audio) {
+      audio = new (window.AudioContext ||
+        window.webkitAudioContext)();
 
-      .timeline{
-        margin-top:18px;
-        border:1px solid #292929;
-        border-radius:16px;
-        overflow:hidden;
-        background:#080808;
-      }
+      master = audio.createGain();
+      master.gain.value = 0.8;
+      master.connect(audio.destination);
+    }
 
-      .timeline-ruler{
-        display:flex;
-        min-width:900px;
-        border-bottom:1px solid #292929;
-      }
+    if (audio.state === "suspended") {
+      audio.resume();
+    }
+  }
 
-      .timeline-ruler div{
-        width:64px;
-        padding:8px 4px;
-        text-align:center;
-        color:#777;
-        font-size:11px;
-        border-right:1px solid #181818;
-      }
+  function midiToHz(midi) {
+    return 440 * Math.pow(2, (midi - 69) / 12);
+  }
 
-      .track{
-        min-width:900px;
-        min-height:74px;
-        display:flex;
-        border-bottom:1px solid #222;
-      }
+  function playNote(midi, type = "triangle") {
+    audioStart();
 
-      .track-info{
-        width:120px;
-        min-width:120px;
-        padding:10px;
-        border-right:1px solid #292929;
-      }
+    const now = audio.currentTime;
 
-      .track-info b{
-        display:block;
-        font-size:13px;
-      }
+    const osc = audio.createOscillator();
+    const gain = audio.createGain();
 
-      .track-info small{
-        color:#777;
-        font-size:10px;
-      }
+    osc.type = type;
+    osc.frequency.value = midiToHz(midi);
 
-      .track-lane{
-        position:relative;
-        flex:1;
-        background:
-          repeating-linear-gradient(
-            90deg,
-            #080808 0,
-            #080808 63px,
-            #181818 64px
-          );
-      }
+    gain.gain.setValueAtTime(0.0001, now);
 
-      .clip{
-        position:absolute;
-        top:13px;
-        height:48px;
-        min-width:100px;
-        border:1px solid #fff;
-        border-radius:9px;
-        background:#1b1b1b;
-        padding:8px;
-        font-size:11px;
-        overflow:hidden;
-      }
+    gain.gain.exponentialRampToValueAtTime(
+      0.25,
+      now + 0.01
+    );
 
-      .transport{
-        margin-top:16px;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        gap:10px;
-      }
+    gain.gain.exponentialRampToValueAtTime(
+      0.0001,
+      now + 0.7
+    );
 
-      .transport button{
-        width:48px;
-        height:48px;
-        border-radius:50%;
-      }
+    osc.connect(gain);
+    gain.connect(master);
 
-      .bpm-box
+    osc.start(now);
+    osc.stop(now + 0.75);
+  }
+
+  function render() {
+    const filtered = instruments.filter(item =>
+      category === "all" || item[1] === category
+    );
+
+    app.innerHTML = `
+      <div class="sb">
+        <header class="sb-top">
+          <div class="brand">STUDIO<span>BEAT</span></div>
+          <div class="project-name">My First Song</div>
+          <div class="transport">
+            <button id="new">NEW</button>
+            <button id="stop">■</button>
+            <button id="play">${playing ? "❚❚" : "▶"}</button>
+            <button id="record" class="${recording ? "recording" : ""}">●</button>
+            <label>
+              BPM
+              <input id="bpm" type="number" min="40" max="240" value="${bpm}">
+            </label>
+          </div>
+        </header>
+
+        <div class="studio-tabs">
+          <button data-tab="arrange">ARRANGE</button>
+          <button data-tab="sounds">SOUNDS</button>
+          <button data-tab="piano">PIANO</button>
+          <button data-tab="looper">LOOPER</button>
+          <button data-tab="recording">RECORD</button>
+          <button data-tab="mixer">MIXER</button>
+          <button data-tab="tools">TOOLS</button>
+        </div>
+
+        <main>
+
+          <section class="panel ${activeTab === "arrange" ? "show
