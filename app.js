@@ -2,77 +2,77 @@
   "use strict";
 
   const app = document.getElementById("app");
-
-  if (!app) {
-    throw new Error("StudioBeat: #app was not found.");
-  }
+  if (!app) return;
 
   const instruments = [
-    ["Piano","Keys"],["Grand Piano","Keys"],["Bright Piano","Keys"],
-    ["Electric Piano","Keys"],["Warm EP","Keys"],["Honky Piano","Keys"],
-    ["Organ","Keys"],["Jazz Organ","Keys"],["Church Organ","Keys"],
-    ["Clavinet","Keys"],["R&B Keys","Keys"],["Soul Keys","Keys"],
-    ["Lo-fi Keys","Keys"],["FM Keys","Keys"],["Trap Keys","Keys"],
-    ["Afro Piano","Keys"],["Drill Piano","Keys"],
+    ["Piano","keys"],["Grand Piano","keys"],["Bright Piano","keys"],
+    ["Electric Piano","keys"],["Warm EP","keys"],["Honky Piano","keys"],
+    ["Organ","keys"],["Jazz Organ","keys"],["Church Organ","keys"],
+    ["Clavinet","keys"],["R&B Keys","keys"],["Soul Keys","keys"],
+    ["Lo-fi Keys","keys"],["Trap Keys","keys"],["Afro Piano","keys"],
+    ["Drill Piano","keys"],
 
-    ["Acoustic Guitar","Guitar"],["Nylon Guitar","Guitar"],
-    ["Electric Guitar","Guitar"],["Clean Guitar","Guitar"],
-    ["Muted Guitar","Guitar"],["Bass Guitar","Bass"],
-    ["808 Bass","Bass"],["Sub Bass","Bass"],["Slap Bass","Bass"],
-    ["Fretless Bass","Bass"],["Afro Bass","Bass"],["Drill 808","Bass"],
-    ["Accordion Bass","Bass"],
+    ["Acoustic Guitar","guitar"],["Nylon Guitar","guitar"],
+    ["Electric Guitar","guitar"],["Clean Guitar","guitar"],
+    ["Muted Guitar","guitar"],["Bass Guitar","bass"],["808 Bass","bass"],
+    ["Sub Bass","bass"],["Slap Bass","bass"],["Fretless Bass","bass"],
+    ["Afro Bass","bass"],["Drill 808","bass"],
 
-    ["Violin","Strings"],["Viola","Strings"],["Cello","Strings"],
-    ["Contrabass","Strings"],["String Ensemble","Strings"],
-    ["Cinematic Strings","Strings"],["World Strings","Strings"],
+    ["Violin","strings"],["Viola","strings"],["Cello","strings"],
+    ["Contrabass","strings"],["String Ensemble","strings"],
+    ["Cinematic Strings","strings"],
 
-    ["Trumpet","Brass"],["Trombone","Brass"],["Saxophone","Brass"],
-    ["French Horn","Brass"],["Brass Section","Brass"],
-    ["Cinematic Brass","Brass"],
+    ["Trumpet","brass"],["Trombone","brass"],["Saxophone","brass"],
+    ["French Horn","brass"],["Brass Section","brass"],
 
-    ["Flute","Woodwind"],["Clarinet","Woodwind"],["Oboe","Woodwind"],
-    ["Recorder","Woodwind"],["Pan Flute","Woodwind"],["World Flute","Woodwind"],
+    ["Flute","woodwind"],["Clarinet","woodwind"],["Oboe","woodwind"],
+    ["Recorder","woodwind"],["Pan Flute","woodwind"],
 
-    ["Marimba","Mallet"],["Vibraphone","Mallet"],["Xylophone","Mallet"],
-    ["Kalimba","Mallet"],["Steel Drums","Mallet"],["Celesta","Mallet"],
-    ["Music Box","Mallet"],["Glockenspiel","Mallet"],
+    ["Marimba","mallet"],["Vibraphone","mallet"],["Xylophone","mallet"],
+    ["Kalimba","mallet"],["Steel Drums","mallet"],["Celesta","mallet"],
+    ["Music Box","mallet"],["Glockenspiel","mallet"],
 
-    ["Acoustic Kit","Drums"],["Studio Kit","Drums"],["808 Kit","Drums"],
-    ["Afro Kit","Drums"],["Percussion","Drums"],["Kick","Drums"],
-    ["Deep Kick","Drums"],["Snare","Drums"],["Closed Hat","Drums"],
-    ["Open Hat","Drums"],["Crash","Drums"],["Ride","Drums"],
-    ["Tom","Drums"],["Floor Tom","Drums"],
+    ["Acoustic Kit","drums"],["Studio Kit","drums"],["808 Kit","drums"],
+    ["Afro Kit","drums"],["Percussion","drums"],["Kick","drums"],
+    ["Deep Kick","drums"],["Snare","drums"],["Closed Hat","drums"],
+    ["Open Hat","drums"],["Crash","drums"],["Ride","drums"],
+    ["Tom","drums"],["Floor Tom","drums"],
 
-    ["Talking Drum","African"],["Talking Drum High","African"],
-    ["Talking Drum Low","African"],["Djembe","African"],
-    ["Djembe High","African"],["Djembe Low","African"],
-    ["Conga","African"],["Bongo","African"],["Shekere","African"],
-    ["African Bell","African"],["African Percussion","African"],
-    ["Amapiano Log Drum","African"],["Log Drum Deep","African"],
-    ["Log Drum High","African"],
+    ["Talking Drum","african"],["Talking Drum High","african"],
+    ["Talking Drum Low","african"],["Djembe","african"],
+    ["Djembe High","african"],["Djembe Low","african"],
+    ["Conga","african"],["Bongo","african"],["Shekere","african"],
+    ["African Bell","african"],["African Percussion","african"],
+    ["Amapiano Log Drum","african"],["Log Drum Deep","african"],
+    ["Log Drum High","african"],
 
-    ["Lead Saw","Synth"],["Lead Square","Synth"],["Lead Pulse","Synth"],
-    ["Synth Brass","Synth"],["Synth Bass","Synth"],["Warm Pad","Synth"],
-    ["Dark Pad","Synth"],["Choir Pad","Synth"],["Air Pad","Synth"],
-    ["Dream Pad","Synth"],["Pluck","Synth"],["Digital Pluck","Synth"],
-    ["Bell Pluck","Synth"],["Afro Pluck","Synth"],["Trap Pluck","Synth"],
-    ["Synth Lead","Synth"],["Retro Lead","Synth"],["Vapor Lead","Synth"],
-    ["House Lead","Synth"],["Amapiano Lead","Synth"],["Vintage Synth","Synth"],
-    ["Analog Bass","Synth"],["Mono Synth","Synth"],["Poly Synth","Synth"],
+    ["Lead Saw","synth"],["Lead Square","synth"],["Lead Pulse","synth"],
+    ["Synth Brass","synth"],["Synth Bass","synth"],["Warm Pad","synth"],
+    ["Dark Pad","synth"],["Choir Pad","synth"],["Air Pad","synth"],
+    ["Dream Pad","synth"],["Pluck","synth"],["Digital Pluck","synth"],
+    ["Bell Pluck","synth"],["Afro Pluck","synth"],["Trap Pluck","synth"],
+    ["Synth Lead","synth"],["Retro Lead","synth"],["Vapor Lead","synth"],
+    ["House Lead","synth"],["Amapiano Lead","synth"],["Vintage Synth","synth"],
+    ["Analog Bass","synth"],["Mono Synth","synth"],["Poly Synth","synth"],
 
-    ["Choir","Vocal"],["Male Choir","Vocal"],["Female Choir","Vocal"],
-    ["Vocal Ah","Vocal"],["Vocal Oo","Vocal"],["Digital Choir","Vocal"],
+    ["Choir","vocal"],["Male Choir","vocal"],["Female Choir","vocal"],
+    ["Vocal Ah","vocal"],["Vocal Oo","vocal"],
 
-    ["Harp","Other"],["Acoustic Harp","Other"],["Banjo","Other"],
-    ["Mandolin","Other"],["Ukulele","Other"],["Bell","Other"],
-    ["Church Bells","Other"],["Crystal Bell","Other"],["Cowbell","Other"],
-    ["Agogo","Other"],["Guiro","Other"],["Cabasa","Other"],
-    ["Tambourine","Other"],["Woodblock","Other"],["Rimshot","Other"],
-    ["Clap","Other"],["Snap","Other"],["Cajon","Other"],["Timbale","Other"],
+    ["Harp","other"],["Acoustic Harp","other"],["Banjo","other"],
+    ["Mandolin","other"],["Ukulele","other"],["Bell","other"],
+    ["Church Bells","other"],["Crystal Bell","other"],["Cowbell","other"],
+    ["Agogo","other"],["Guiro","other"],["Cabasa","other"],
+    ["Tambourine","other"],["Woodblock","other"],["Rimshot","other"],
+    ["Clap","other"],["Snap","other"],["Cajon","other"],["Timbale","other"],
 
-    ["Breath","FX"],["Atmosphere","FX"],["Impact","FX"],
-    ["Reverse FX","FX"],["Vinyl FX","FX"],["Tape Stop FX","FX"],
-    ["Riser","FX"],["Downlifter","FX"],["Sub Drop","FX"]
+    ["Breath","fx"],["Atmosphere","fx"],["Impact","fx"],["Reverse FX","fx"],
+    ["Vinyl FX","fx"],["Tape Stop FX","fx"],["Riser","fx"],
+    ["Downlifter","fx"],["Sub Drop","fx"]
+  ];
+
+  const categories = [
+    "all","keys","guitar","bass","strings","brass","woodwind",
+    "mallet","drums","african","synth","vocal","other","fx"
   ];
 
   const genres = [
@@ -80,29 +80,41 @@
     "Pop","Dancehall","Reggae","Gospel","EDM","House","Lo-fi"
   ];
 
-  const categories = [
-    "All","Keys","Guitar","Bass","Strings","Brass","Woodwind",
-    "Mallet","Drums","African","Synth","Vocal","Other","FX"
-  ];
+  let audio = null;
+  let master = null;
 
-  let selectedCategory = "All";
-  let selectedInstrument = "Piano";
   let bpm = 105;
   let playing = false;
   let timer = null;
-  let audio = null;
-  let masterGain = null;
-  let recording = false;
-  let mediaRecorder = null;
-  let chunks = [];
-  let trackNumber = 1;
+  let beat = 0;
 
-  function startAudio() {
+  let selected = "Piano";
+  let category = "all";
+  let activeTab = "arrange";
+  let octave = 4;
+
+  let tracks = [
+    {
+      name: "Track 1",
+      instrument: "Piano",
+      type: "MIDI"
+    }
+  ];
+
+  let clips = [];
+
+  let recorder = null;
+  let recording = false;
+  let chunks = [];
+
+  function audioStart() {
     if (!audio) {
-      audio = new (window.AudioContext || window.webkitAudioContext)();
-      masterGain = audio.createGain();
-      masterGain.gain.value = 0.75;
-      masterGain.connect(audio.destination);
+      audio = new (window.AudioContext ||
+        window.webkitAudioContext)();
+
+      master = audio.createGain();
+      master.gain.value = 0.8;
+      master.connect(audio.destination);
     }
 
     if (audio.state === "suspended") {
@@ -110,588 +122,1085 @@
     }
   }
 
-  function playNote(frequency, duration = 0.7) {
-    startAudio();
-
-    const osc = audio.createOscillator();
-    const gain = audio.createGain();
-
-    osc.type = "triangle";
-    osc.frequency.value = frequency;
-
-    gain.gain.setValueAtTime(0.0001, audio.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.25, audio.currentTime + 0.01);
-    gain.gain.exponentialRampToValueAtTime(
-      0.0001,
-      audio.currentTime + duration
-    );
-
-    osc.connect(gain);
-    gain.connect(masterGain);
-
-    osc.start();
-    osc.stop(audio.currentTime + duration + 0.05);
-  }
-
   function midiToHz(midi) {
     return 440 * Math.pow(2, (midi - 69) / 12);
   }
 
-  function pianoKey(midi) {
-    return `<button class="white-key" data-midi="${midi}"></button>`;
-  }
+  function playNote(midi, type = "triangle") {
+    audioStart();
 
-  function renderPiano() {
-    const whites = [60,62,64,65,67,69,71,72,74,76,77,79,81,83];
+    const now = audio.currentTime;
 
-    let html = "";
+    const osc = audio.createOscillator();
+    const gain = audio.createGain();
 
-    whites.forEach(midi => {
-      html += pianoKey(midi);
-    });
+    osc.type = type;
+    osc.frequency.value = midiToHz(midi);
 
-    const blackPositions = [
-      [61,41],[63,101],[66,221],[68,281],[70,341],
-      [73,461],[75,521],[78,641],[80,701],[82,761]
-    ];
-
-    blackPositions.forEach(([midi,left]) => {
-      html += `
-        <button
-          class="black-key"
-          style="left:${left}px"
-          data-midi="${midi}">
-        </button>
-      `;
-    });
-
-    return html;
-  }
-
-  function renderInstruments() {
-    const list = instruments.filter(item =>
-      selectedCategory === "All" || item[1] === selectedCategory
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(
+      0.25,
+      now + 0.01
     );
 
-    return list.map(([name,type]) => `
-      <button
-        class="instrument"
-        data-instrument="${name}"
-        data-type="${type}">
-        ${name}
-      </button>
-    `).join("");
-  }
+    gain.gain.exponentialRampToValueAtTime(
+      0.0001,
+      now + 0.7
+    );
 
-  function renderTracks() {
-    return `
-      <div class="track">
-        <div class="track-info">
-          <div class="track-name">Track 1</div>
-          <div class="track-type">${selectedInstrument}</div>
-        </div>
+    osc.connect(gain);
+    gain.connect(master);
 
-        <div class="track-lane">
-          <div class="clip" style="left:20px;width:230px;">
-            ${selectedInstrument} Region
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  function renderMixer() {
-    return Array.from({length:4}, (_,i) => `
-      <div class="channel">
-        <strong>Track ${i + 1}</strong>
-        <br><br>
-
-        <label>Volume</label>
-        <input type="range" min="0" max="100" value="80">
-
-        <br><br>
-
-        <button>Mute</button>
-        <button>Solo</button>
-      </div>
-    `).join("");
+    osc.start(now);
+    osc.stop(now + 0.75);
   }
 
   function render() {
+
+    const filtered = instruments.filter(item =>
+      category === "all" || item[1] === category
+    );
+
     app.innerHTML = `
-      <header class="topbar">
 
-        <div class="logo">
-          STUDIO<span>BEAT</span>
-        </div>
+      <div class="sb">
 
-        <div class="transport">
-          <button id="stopBtn">■</button>
-          <button id="playBtn">▶</button>
-          <button id="recordBtn">●</button>
+        <header class="sb-top">
 
-          <input
-            id="bpm"
-            class="bpm"
-            type="number"
-            min="40"
-            max="240"
-            value="${bpm}">
-        </div>
-
-      </header>
-
-      <main class="workspace">
-
-        <div class="toolbar">
-          <button data-action="new">New</button>
-          <button data-action="save">Save</button>
-          <button data-action="undo">Undo</button>
-          <button data-action="redo">Redo</button>
-          <button data-action="metronome">Metronome</button>
-          <button data-action="zoom">Zoom</button>
-        </div>
-
-        <section class="section panel active" id="arrange">
-
-          <div class="section-title">
-            ARRANGEMENT
+          <div class="brand">
+            STUDIO<span>BEAT</span>
           </div>
 
-          <div class="arrangement">
+          <div class="project-name">
+            My First Song
+          </div>
 
-            <div class="timeline">
+          <div class="transport">
 
-              <div class="ruler">
-                ${Array.from({length:12},(_,i)=>
-                  `<div class="beat">${i + 1}</div>`
-                ).join("")}
+            <button id="new">NEW</button>
+
+            <button id="stop">
+              ■
+            </button>
+
+            <button id="play">
+              ${playing ? "❚❚" : "▶"}
+            </button>
+
+            <button id="record"
+              class="${recording ? "recording" : ""}">
+              ●
+            </button>
+
+            <label>
+              BPM
+              <input
+                id="bpm"
+                type="number"
+                min="40"
+                max="240"
+                value="${bpm}">
+            </label>
+
+          </div>
+
+        </header>
+
+        <div class="studio-tabs">
+
+          <button data-tab="arrange">
+            ARRANGE
+          </button>
+
+          <button data-tab="sounds">
+            SOUNDS
+          </button>
+
+          <button data-tab="piano">
+            PIANO
+          </button>
+
+          <button data-tab="looper">
+            LOOPER
+          </button>
+
+          <button data-tab="recording">
+            RECORD
+          </button>
+
+          <button data-tab="mixer">
+            MIXER
+          </button>
+
+          <button data-tab="tools">
+            TOOLS
+          </button>
+
+        </div>
+
+        <main>
+
+          <!-- ARRANGEMENT -->
+
+          <section
+            class="panel ${activeTab === "arrange" ? "show" : ""}">
+
+            <div class="panel-title">
+
+              <b>ARRANGEMENT</b>
+
+              <span>
+                ${bpm} BPM
+              </span>
+
+            </div>
+
+            <div class="timeline-scroll">
+
+              <div class="timeline">
+
+                <div class="ruler">
+
+                  <div class="track-name">
+                    TRACKS
+                  </div>
+
+                  ${Array.from(
+                    {length:32},
+                    (_,i) =>
+                    `<div>${i + 1}</div>`
+                  ).join("")}
+
+                </div>
+
+                ${tracks.map(
+                  (track,index) => `
+
+                  <div class="track">
+
+                    <div class="track-info">
+
+                      <b>
+                        ${track.name}
+                      </b>
+
+                      <small>
+                        ${track.instrument}
+                      </small>
+
+                      <button>
+                        M
+                      </button>
+
+                      <button>
+                        S
+                      </button>
+
+                    </div>
+
+                    <div class="lane">
+
+                      ${Array.from(
+                        {length:32},
+                        () => `<i></i>`
+                      ).join("")}
+
+                      ${
+                        clips
+                        .filter(c => c.track === index)
+                        .map(c => `
+                          <div
+                            class="clip"
+                            style="
+                              left:${c.start * 64}px;
+                              width:${c.length * 64}px;
+                            ">
+                            ${c.name}
+                          </div>
+                        `)
+                        .join("")
+                      }
+
+                    </div>
+
+                  </div>
+
+                `).join("")}
+
+                <div
+                  id="playhead"
+                  style="
+                    left:${130 + beat * 64}px;
+                  ">
+                </div>
+
               </div>
 
-              <div class="playhead"></div>
+            </div>
 
-              ${renderTracks()}
+            <div class="arrangement-buttons">
+
+              <button id="addTrack">
+                ＋ ADD TRACK
+              </button>
+
+              <button id="addRegion">
+                ＋ ADD REGION
+              </button>
+
+              <button>
+                UNDO
+              </button>
+
+              <button>
+                REDO
+              </button>
+
+              <button>
+                SNAP
+              </button>
+
+              <button>
+                ZOOM
+              </button>
 
             </div>
 
-          </div>
+          </section>
 
-        </section>
 
-        <section class="section panel" id="sounds">
+          <!-- SOUNDS -->
 
-          <div class="section-title">
-            INSTRUMENTS — ${instruments.length}
-          </div>
+          <section
+            class="panel ${activeTab === "sounds" ? "show" : ""}">
 
-          <div class="browser">
+            <div class="panel-title">
+
+              <b>
+                INSTRUMENTS
+              </b>
+
+              <span>
+                ${instruments.length}
+              </span>
+
+            </div>
 
             <div class="categories">
-              ${categories.map(category => `
+
+              ${categories.map(c => `
+
                 <button
-                  class="${category === selectedCategory ? "active" : ""}"
-                  data-category="${category}">
-                  ${category}
+                  data-category="${c}"
+                  class="${category === c ? "selected" : ""}">
+
+                  ${c.toUpperCase()}
+
                 </button>
+
               `).join("")}
+
             </div>
 
-            <div class="instrument-list">
-              ${renderInstruments()}
+            <div class="instrument-grid">
+
+              ${filtered.map(item => `
+
+                <button
+                  class="instrument"
+                  data-instrument="${item[0]}">
+
+                  <b>
+                    ${item[0]}
+                  </b>
+
+                  <small>
+                    ${item[1]}
+                  </small>
+
+                </button>
+
+              `).join("")}
+
             </div>
 
-          </div>
+          </section>
 
-        </section>
 
-        <section class="section panel" id="piano">
+          <!-- PIANO -->
 
-          <div class="section-title">
-            PIANO — ${selectedInstrument}
-          </div>
+          <section
+            class="panel ${activeTab === "piano" ? "show" : ""}">
 
-          <div class="piano-wrap">
-            <div class="piano">
-              ${renderPiano()}
+            <div class="panel-title">
+
+              <b>PIANO</b>
+
+              <span>
+                ${selected}
+              </span>
+
             </div>
-          </div>
 
-        </section>
+            <div class="piano-tools">
 
-        <section class="section panel" id="looper">
-
-          <div class="section-title">
-            LOOPER
-          </div>
-
-          <div class="looper-grid">
-
-            ${[
-              "Afro Drums",
-              "Amapiano Groove",
-              "Trap Drums",
-              "Drill Groove",
-              "Afro Bass",
-              "Log Drum",
-              "Piano Loop",
-              "Guitar Loop",
-              "Vocal Chop",
-              "Percussion",
-              "Synth Loop",
-              "FX Loop"
-            ].map(name => `
-              <button class="loop-cell">
-                ${name}
+              <button id="octDown">
+                OCT −
               </button>
-            `).join("")}
 
-          </div>
+              <button id="octUp">
+                OCT ＋
+              </button>
 
-        </section>
+              <button>
+                SUSTAIN
+              </button>
 
-        <section class="section panel" id="record">
+              <button>
+                SMART CHORD
+              </button>
 
-          <div class="section-title">
-            RECORDING STUDIO
-          </div>
+              <button>
+                ARPEGGIATOR
+              </button>
 
-          <div style="padding:15px;">
-
-            <button id="micRecord">
-              Start Vocal Recording
-            </button>
-
-            <button>
-              Noise Reduction
-            </button>
-
-            <button>
-              Pitch Correction
-            </button>
-
-            <button>
-              Vocal Presets
-            </button>
-
-            <br><br>
-
-            <button>EQ</button>
-            <button>Compression</button>
-            <button>Reverb</button>
-            <button>Delay</button>
-
-            <div style="margin-top:20px;">
-              Input Level
-              <input type="range" min="0" max="100" value="70">
             </div>
 
-          </div>
+            <div class="keyboard-scroll">
 
-        </section>
+              <div class="keyboard">
 
-        <section class="section panel" id="mixer">
+                ${whiteKeys()}
 
-          <div class="section-title">
-            MIXER
-          </div>
+                ${blackKeys()}
 
-          <div class="mixer">
-            ${renderMixer()}
-          </div>
+              </div>
 
-        </section>
+            </div>
 
-        <section class="section panel" id="tools">
+          </section>
 
-          <div class="section-title">
-            TOOLS
-          </div>
 
-          <div style="padding:15px;">
+          <!-- LOOPER -->
 
-            <button id="tuner">
-              🎸 Guitar Tuner
-            </button>
+          <section
+            class="panel ${activeTab === "looper" ? "show" : ""}">
 
-            <button>
-              Smart Chords
-            </button>
+            <div class="panel-title">
 
-            <button>
-              Arpeggiator
-            </button>
+              <b>LOOPER</b>
 
-            <button>
-              Mastering
-            </button>
+              <span>
+                PERFORMANCE GRID
+              </span>
 
-            <button>
-              Import Audio
-            </button>
+            </div>
 
-            <button>
-              Export Song
-            </button>
+            <div class="loop-packs">
 
-          </div>
+              ${genres.map(g => `
 
-        </section>
+                <button>
+                  ${g}
+                  <small>
+                    PACK
+                  </small>
+                </button>
 
-      </main>
+              `).join("")}
 
-      <nav class="bottom-nav">
+            </div>
 
-        <button class="active" data-tab="arrange">
-          Arrange
-        </button>
+            <div class="looper-grid">
 
-        <button data-tab="sounds">
-          Sounds
-        </button>
+              ${
+                [
+                  "Drums",
+                  "Bass",
+                  "Keys",
+                  "Guitar",
+                  "Percussion",
+                  "Log Drum",
+                  "Lead",
+                  "Vocal",
+                  "FX",
+                  "Top Loop",
+                  "Chord",
+                  "Fill"
+                ].map((name,i) => `
 
-        <button data-tab="piano">
-          Piano
-        </button>
+                  <button
+                    class="loop-cell"
+                    data-loop="${i}">
 
-        <button data-tab="looper">
-          Looper
-        </button>
+                    <b>
+                      ${name}
+                    </b>
 
-        <button data-tab="mixer">
-          Mixer
-        </button>
+                    <small>
+                      LOOP ${i + 1}
+                    </small>
 
-      </nav>
+                  </button>
+
+                `).join("")
+              }
+
+            </div>
+
+            <div class="fx-buttons">
+
+              <button>
+                GATER
+              </button>
+
+              <button>
+                STUTTER
+              </button>
+
+              <button>
+                TAPE STOP
+              </button>
+
+              <button>
+                RECORD LOOP
+              </button>
+
+            </div>
+
+          </section>
+
+
+          <!-- RECORDING -->
+
+          <section
+            class="panel ${activeTab === "recording" ? "show" : ""}">
+
+            <div class="panel-title">
+
+              <b>
+                RECORDING STUDIO
+              </b>
+
+              <span>
+                VOCAL / AUDIO
+              </span>
+
+            </div>
+
+            <div class="recording-box">
+
+              <button
+                id="micRecord"
+                class="big-record">
+
+                ${recording
+                  ? "STOP RECORDING"
+                  : "START RECORDING"}
+
+              </button>
+
+              <div class="input-meter">
+                <div id="meter"></div>
+              </div>
+
+              <div class="effects">
+
+                <button>
+                  NOISE REDUCTION
+                </button>
+
+                <button>
+                  PITCH CORRECTION
+                </button>
+
+                <button>
+                  VOCAL PRESET
+                </button>
+
+                <button>
+                  EQ
+                </button>
+
+                <button>
+                  COMPRESSION
+                </button>
+
+                <button>
+                  REVERB
+                </button>
+
+                <button>
+                  DELAY
+                </button>
+
+              </div>
+
+              <div id="recordings"></div>
+
+            </div>
+
+          </section>
+
+
+          <!-- MIXER -->
+
+          <section
+            class="panel ${activeTab === "mixer" ? "show" : ""}">
+
+            <div class="panel-title">
+
+              <b>MIXER</b>
+
+              <span>
+                TRACK MIXING
+              </span>
+
+            </div>
+
+            <div class="mixer">
+
+              ${tracks.map(track => `
+
+                <div class="channel">
+
+                  <b>
+                    ${track.name}
+                  </b>
+
+                  <small>
+                    ${track.instrument}
+                  </small>
+
+                  <label>
+                    VOLUME
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="80">
+                  </label>
+
+                  <label>
+                    PAN
+                    <input
+                      type="range"
+                      min="-100"
+                      max="100"
+                      value="0">
+                  </label>
+
+                  <div>
+
+                    <button>
+                      MUTE
+                    </button>
+
+                    <button>
+                      SOLO
+                    </button>
+
+                  </div>
+
+                </div>
+
+              `).join("")}
+
+            </div>
+
+          </section>
+
+
+          <!-- TOOLS -->
+
+          <section
+            class="panel ${activeTab === "tools" ? "show" : ""}">
+
+            <div class="panel-title">
+
+              <b>
+                STUDIO TOOLS
+              </b>
+
+            </div>
+
+            <div class="tool-grid">
+
+              <button>
+                🎸 GUITAR TUNER
+              </button>
+
+              <button>
+                METRONOME
+              </button>
+
+              <button>
+                COUNT-IN
+              </button>
+
+              <button>
+                MASTERING
+              </button>
+
+              <button>
+                IMPORT AUDIO
+              </button>
+
+              <button>
+                EXPORT SONG
+              </button>
+
+              <button>
+                PROJECT SETTINGS
+              </button>
+
+              <button>
+                MY TRACKS
+              </button>
+
+            </div>
+
+          </section>
+
+        </main>
+
+        <nav class="bottom-nav">
+
+          <button
+            data-tab="arrange"
+            class="${activeTab === "arrange" ? "active" : ""}">
+            <b>⌁</b>
+            <span>Arrange</span>
+          </button>
+
+          <button
+            data-tab="sounds"
+            class="${activeTab === "sounds" ? "active" : ""}">
+            <b>♫</b>
+            <span>Sounds</span>
+          </button>
+
+          <button
+            data-tab="piano"
+            class="${activeTab === "piano" ? "active" : ""}">
+            <b>▥</b>
+            <span>Piano</span>
+          </button>
+
+          <button
+            data-tab="looper"
+            class="${activeTab === "looper" ? "active" : ""}">
+            <b>▦</b>
+            <span>Looper</span>
+          </button>
+
+          <button
+            data-tab="mixer"
+            class="${activeTab === "mixer" ? "active" : ""}">
+            <b>≋</b>
+            <span>Mixer</span>
+          </button>
+
+        </nav>
+
+      </div>
     `;
 
     bind();
   }
 
+
+  function whiteKeys() {
+
+    const notes = [
+      60,62,64,65,67,69,71,
+      72,74,76,77,79,81,83
+    ];
+
+    return notes.map(n => `
+      <button
+        class="white-key"
+        data-midi="${n}">
+      </button>
+    `).join("");
+  }
+
+
+  function blackKeys() {
+
+    const keys = [
+      [61,31],[63,77],[66,169],
+      [68,215],[70,261],[73,353],
+      [75,399],[78,491],[80,537],[82,583]
+    ];
+
+    return keys.map(k => `
+      <button
+        class="black-key"
+        style="left:${k[1]}px"
+        data-midi="${k[0]}">
+      </button>
+    `).join("");
+  }
+
+
   function bind() {
 
-    document.querySelectorAll("[data-tab]").forEach(button => {
+    document.querySelectorAll("[data-tab]")
+      .forEach(button => {
 
-      button.addEventListener("click", () => {
+        button.onclick = () => {
 
-        document.querySelectorAll(".panel")
-          .forEach(panel => panel.classList.remove("active"));
+          activeTab = button.dataset.tab;
 
-        document.querySelectorAll("[data-tab]")
-          .forEach(btn => btn.classList.remove("active"));
+          render();
 
-        const tab = button.dataset.tab;
-        const panel = document.getElementById(tab);
+        };
 
-        if (panel) {
-          panel.classList.add("active");
-          button.classList.add("active");
-        }
       });
 
-    });
 
-    document.querySelectorAll("[data-category]").forEach(button => {
+    document.querySelectorAll("[data-category]")
+      .forEach(button => {
 
-      button.addEventListener("click", () => {
+        button.onclick = () => {
 
-        selectedCategory = button.dataset.category;
+          category = button.dataset.category;
+
+          activeTab = "sounds";
+
+          render();
+
+        };
+
+      });
+
+
+    document.querySelectorAll("[data-instrument]")
+      .forEach(button => {
+
+        button.onclick = () => {
+
+          selected = button.dataset.instrument;
+
+          tracks[0].instrument = selected;
+
+          activeTab = "piano";
+
+          render();
+
+        };
+
+      });
+
+
+    document.querySelectorAll("[data-midi]")
+      .forEach(button => {
+
+        button.onpointerdown = () => {
+
+          const midi =
+            Number(button.dataset.midi);
+
+          playNote(midi);
+
+        };
+
+      });
+
+
+    document.getElementById("bpm").onchange =
+      event => {
+
+        bpm = Math.max(
+          40,
+          Math.min(
+            240,
+            Number(event.target.value) || 105
+          )
+        );
+
+      };
+
+
+    document.getElementById("play").onclick =
+      () => {
+
+        audioStart();
+
+        if (playing) return;
+
+        playing = true;
+
+        beat = 0;
 
         render();
-        document.querySelector('[data-tab="sounds"]')?.click();
 
-      });
+        timer = setInterval(() => {
 
-    });
+          beat++;
 
-    document.querySelectorAll("[data-instrument]").forEach(button => {
+          if (beat >= 32) {
+            beat = 0;
+          }
 
-      button.addEventListener("click", () => {
+          const playhead =
+            document.getElementById("playhead");
 
-        selectedInstrument = button.dataset.instrument;
+          if (playhead) {
 
-        startAudio();
+            playhead.style.left =
+              (130 + beat * 64) + "px";
+
+          }
+
+        }, 60000 / bpm / 4);
+
+      };
+
+
+    document.getElementById("stop").onclick =
+      () => {
+
+        playing = false;
+
+        clearInterval(timer);
+
+        timer = null;
+
+        beat = 0;
 
         render();
 
-        document.querySelector('[data-tab="piano"]')?.click();
+      };
 
-      });
 
-    });
+    document.getElementById("record").onclick =
+      () => {
 
-    document.querySelectorAll("[data-midi]").forEach(key => {
+        activeTab = "recording";
 
-      key.addEventListener("pointerdown", () => {
+        render();
 
-        const midi = Number(key.dataset.midi);
+      };
 
-        playNote(midiToHz(midi));
 
-      });
+    document.getElementById("new").onclick =
+      () => {
 
-    });
+        tracks = [
+          {
+            name:"Track 1",
+            instrument:"Piano",
+            type:"MIDI"
+          }
+        ];
 
-    document.querySelectorAll(".loop-cell").forEach(cell => {
+        clips = [];
 
-      cell.addEventListener("click", () => {
-        cell.classList.toggle("active");
-      });
+        selected = "Piano";
 
-    });
+        render();
 
-    document.getElementById("bpm")?.addEventListener("change", e => {
+      };
 
-      bpm = Math.max(40, Math.min(240, Number(e.target.value) || 105));
 
-    });
+    document.getElementById("addTrack").onclick =
+      () => {
 
-    document.getElementById("playBtn")?.addEventListener("click", () => {
+        tracks.push({
 
-      startAudio();
+          name:
+            "Track " +
+            (tracks.length + 1),
 
-      if (playing) return;
+          instrument:selected,
 
-      playing = true;
-
-      timer = setInterval(() => {
-
-        document.querySelectorAll(".clip").forEach((clip,index) => {
-
-          clip.style.transform =
-            `translateX(${(Date.now() / 30) % 80}px)`;
+          type:"MIDI"
 
         });
 
-      }, 100);
+        render();
 
-    });
+      };
 
-    document.getElementById("stopBtn")?.addEventListener("click", () => {
 
-      playing = false;
+    document.getElementById("addRegion").onclick =
+      () => {
 
-      clearInterval(timer);
+        clips.push({
 
-      document.querySelectorAll(".clip").forEach(clip => {
-        clip.style.transform = "";
+          track:0,
+
+          start:
+            clips.length * 4,
+
+          length:4,
+
+          name:
+            selected + " Region"
+
+        });
+
+        render();
+
+      };
+
+
+    document.getElementById("octDown").onclick =
+      () => {
+
+        octave =
+          Math.max(1, octave - 1);
+
+        render();
+
+      };
+
+
+    document.getElementById("octUp").onclick =
+      () => {
+
+        octave =
+          Math.min(7, octave + 1);
+
+        render();
+
+      };
+
+
+    document.querySelectorAll("[data-loop]")
+      .forEach(button => {
+
+        button.onclick = () => {
+
+          button.classList.toggle("active");
+
+          audioStart();
+
+          playNote(
+            60 +
+            Number(button.dataset.loop) * 2
+          );
+
+        };
+
       });
 
-    });
 
-    document.getElementById("recordBtn")?.addEventListener("click", () => {
+    document.getElementById("micRecord").onclick =
+      startRecording;
 
-      recording = !recording;
+  }
 
-      const button = document.getElementById("recordBtn");
 
-      if (button) {
-        button.classList.toggle("recording", recording);
+  async function startRecording() {
+
+    if (recording) {
+
+      if (recorder) {
+        recorder.stop();
       }
 
-    });
+      recording = false;
 
-    document.getElementById("micRecord")?.addEventListener("click", async () => {
+      render();
 
-      if (recording) {
+      return;
 
-        if (mediaRecorder) {
-          mediaRecorder.stop();
-        }
+    }
 
-        recording = false;
+    if (
+      !navigator.mediaDevices ||
+      !navigator.mediaDevices.getUserMedia
+    ) {
 
-        return;
-      }
+      alert(
+        "Microphone recording is not available here."
+      );
 
-      try {
+      return;
 
-        const stream =
-          await navigator.mediaDevices.getUserMedia({
-            audio: true
-          });
+    }
 
-        chunks = [];
+    try {
 
-        mediaRecorder = new MediaRecorder(stream);
+      const stream =
+        await navigator.mediaDevices.getUserMedia({
+          audio:true
+        });
 
-        mediaRecorder.ondataavailable = event => {
+      chunks = [];
+
+      recorder =
+        new MediaRecorder(stream);
+
+      recorder.ondataavailable =
+        event => {
+
           if (event.data.size) {
             chunks.push(event.data);
           }
-        };
-
-        mediaRecorder.onstop = () => {
-
-          stream.getTracks().forEach(track => track.stop());
-
-          const blob = new Blob(chunks, {
-            type: "audio/webm"
-          });
-
-          const url = URL.createObjectURL(blob);
-
-          const link = document.createElement("a");
-
-          link.href = url;
-          link.download = "StudioBeat-recording.webm";
-          link.textContent = "Recording ready — tap to save";
-
-          link.style.display = "block";
-          link.style.marginTop = "15px";
-
-          document.getElementById("record")?.querySelector("div")
-            ?.appendChild(link);
 
         };
 
-        mediaRecorder.start();
+      recorder.onstop = () => {
 
-        recording = true;
+        stream
+          .getTracks()
+          .forEach(track => track.stop());
 
-      } catch (error) {
-
-        alert(
-          "Microphone permission is required for recording."
-        );
-
-      }
-
-    });
-
-    document.querySelectorAll("[data-action]").forEach(button => {
-
-      button.addEventListener("click", () => {
-
-        const action = button.dataset.action;
-
-        if (action === "new") {
-          location.reload();
-        }
-
-        if (action === "save") {
-          localStorage.setItem(
-            "StudioBeatProject",
-            JSON.stringify({
-              bpm,
-              selectedInstrument,
-              selectedCategory
-            })
+        const blob =
+          new Blob(
+            chunks,
+            {type:"audio/webm"}
           );
 
-          alert("Project saved.");
+        const url =
+          URL.createObjectURL(blob);
+
+        const box =
+          document.getElementById(
+            "recordings"
+          );
+
+        if (box) {
+
+          box.innerHTML += `
+            <div class="recording-file">
+              <audio
+                controls
+                src="${url}">
+              </audio>
+              <a
+                href="${url}"
+                download="StudioBeat-recording.webm">
+                SAVE RECORDING
+              </a>
+            </div>
+          `;
+
         }
 
-        if (action === "metronome") {
-          alert("Metronome enabled.");
-        }
+      };
 
-      });
+      recorder.start();
 
-    });
+      recording = true;
+
+      render();
+
+    } catch (error) {
+
+      alert(
+        "Microphone permission is required."
+      );
+
+    }
 
   }
+
 
   render();
 
 })();
- 
