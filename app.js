@@ -240,8 +240,6 @@
 
         <main>
 
-          <!-- ARRANGEMENT -->
-
           <section
             class="panel ${activeTab === "arrange" ? "show" : ""}">
 
@@ -368,9 +366,6 @@
 
           </section>
 
-
-          <!-- SOUNDS -->
-
           <section
             class="panel ${activeTab === "sounds" ? "show" : ""}">
 
@@ -426,9 +421,6 @@
 
           </section>
 
-
-          <!-- PIANO -->
-
           <section
             class="panel ${activeTab === "piano" ? "show" : ""}">
 
@@ -479,9 +471,6 @@
             </div>
 
           </section>
-
-
-          <!-- LOOPER -->
 
           <section
             class="panel ${activeTab === "looper" ? "show" : ""}">
@@ -570,9 +559,6 @@
 
           </section>
 
-
-          <!-- RECORDING -->
-
           <section
             class="panel ${activeTab === "recording" ? "show" : ""}">
 
@@ -642,9 +628,6 @@
 
           </section>
 
-
-          <!-- MIXER -->
-
           <section
             class="panel ${activeTab === "mixer" ? "show" : ""}">
 
@@ -709,9 +692,6 @@
             </div>
 
           </section>
-
-
-          <!-- TOOLS -->
 
           <section
             class="panel ${activeTab === "tools" ? "show" : ""}">
@@ -809,7 +789,6 @@
     bind();
   }
 
-
   function whiteKeys() {
 
     const notes = [
@@ -824,7 +803,6 @@
       </button>
     `).join("");
   }
-
 
   function blackKeys() {
 
@@ -843,7 +821,6 @@
     `).join("");
   }
 
-
   function bind() {
 
     document.querySelectorAll("[data-tab]")
@@ -859,7 +836,6 @@
 
       });
 
-
     document.querySelectorAll("[data-category]")
       .forEach(button => {
 
@@ -874,7 +850,6 @@
         };
 
       });
-
 
     document.querySelectorAll("[data-instrument]")
       .forEach(button => {
@@ -893,7 +868,6 @@
 
       });
 
-
     document.querySelectorAll("[data-midi]")
       .forEach(button => {
 
@@ -908,7 +882,6 @@
 
       });
 
-
     document.getElementById("bpm").onchange =
       event => {
 
@@ -921,7 +894,6 @@
         );
 
       };
-
 
     document.getElementById("play").onclick =
       () => {
@@ -958,7 +930,6 @@
 
       };
 
-
     document.getElementById("stop").onclick =
       () => {
 
@@ -974,7 +945,6 @@
 
       };
 
-
     document.getElementById("record").onclick =
       () => {
 
@@ -983,7 +953,6 @@
         render();
 
       };
-
 
     document.getElementById("new").onclick =
       () => {
@@ -1004,7 +973,6 @@
 
       };
 
-
     document.getElementById("addTrack").onclick =
       () => {
 
@@ -1023,7 +991,6 @@
         render();
 
       };
-
 
     document.getElementById("addRegion").onclick =
       () => {
@@ -1046,7 +1013,6 @@
 
       };
 
-
     document.getElementById("octDown").onclick =
       () => {
 
@@ -1057,7 +1023,6 @@
 
       };
 
-
     document.getElementById("octUp").onclick =
       () => {
 
@@ -1067,7 +1032,6 @@
         render();
 
       };
-
 
     document.querySelectorAll("[data-loop]")
       .forEach(button => {
@@ -1087,12 +1051,10 @@
 
       });
 
-
     document.getElementById("micRecord").onclick =
       startRecording;
 
   }
-
 
   async function startRecording() {
 
@@ -1199,7 +1161,6 @@
     }
 
   }
-
 
   render();
 
