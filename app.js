@@ -987,8 +987,6 @@
 
   }
 
-  alert("StudioBeat is working!");
-
-render();
+ render();
 
 })();
