@@ -4,989 +4,2333 @@
   const app = document.getElementById("app");
   if (!app) return;
 
+  /* =========================================================
+     STUDIOBEAT
+     BandLab-inspired mobile music studio
+     BLACK + WHITE ONLY
+     ========================================================= */
+
+  const state = {
+    screen: "studio",
+    showAddTrack: false,
+    selectedInstrument: "Piano",
+    octave: 4,
+    bpm: 105,
+    playing: false,
+    recording: false,
+    recordingUrl: null,
+    tracks: [],
+    clips: [],
+    drumPattern: {},
+    loops: [],
+    selectedLoop: null,
+    selectedTrack: null
+  };
+
   const instruments = [
-    ["Piano","keys"],["Grand Piano","keys"],["Bright Piano","keys"],
-    ["Electric Piano","keys"],["Warm EP","keys"],["Honky Piano","keys"],
-    ["Organ","keys"],["Jazz Organ","keys"],["Church Organ","keys"],
-    ["Clavinet","keys"],["R&B Keys","keys"],["Soul Keys","keys"],
-    ["Lo-fi Keys","keys"],["Trap Keys","keys"],["Afro Piano","keys"],
-    ["Drill Piano","keys"],
+    ["Piano", "keys"],
+    ["Grand Piano", "keys"],
+    ["Bright Piano", "keys"],
+    ["Electric Piano", "keys"],
+    ["Warm EP", "keys"],
+    ["Honky Piano", "keys"],
+    ["Organ", "keys"],
+    ["Jazz Organ", "keys"],
+    ["Church Organ", "keys"],
+    ["Clavinet", "keys"],
+    ["R&B Keys", "keys"],
+    ["Soul Keys", "keys"],
+    ["Lo-fi Keys", "keys"],
+    ["Trap Keys", "keys"],
+    ["Afro Piano", "keys"],
+    ["Drill Piano", "keys"],
 
-    ["Acoustic Guitar","guitar"],["Nylon Guitar","guitar"],
-    ["Electric Guitar","guitar"],["Clean Guitar","guitar"],
-    ["Muted Guitar","guitar"],["Bass Guitar","bass"],["808 Bass","bass"],
-    ["Sub Bass","bass"],["Slap Bass","bass"],["Fretless Bass","bass"],
-    ["Afro Bass","bass"],["Drill 808","bass"],
+    ["Acoustic Guitar", "guitar"],
+    ["Nylon Guitar", "guitar"],
+    ["Electric Guitar", "guitar"],
+    ["Clean Guitar", "guitar"],
 
-    ["Violin","strings"],["Viola","strings"],["Cello","strings"],
-    ["Contrabass","strings"],["String Ensemble","strings"],
-    ["Cinematic Strings","strings"],
+    ["Bass Guitar", "bass"],
+    ["808 Bass", "bass"],
+    ["Sub Bass", "bass"],
+    ["Trap Bass", "bass"],
+    ["Afro Bass", "bass"],
 
-    ["Trumpet","brass"],["Trombone","brass"],["Saxophone","brass"],
-    ["French Horn","brass"],["Brass Section","brass"],
+    ["Strings", "strings"],
+    ["Violin", "strings"],
+    ["Cello", "strings"],
+    ["Orchestra", "strings"],
 
-    ["Flute","woodwind"],["Clarinet","woodwind"],["Oboe","woodwind"],
-    ["Recorder","woodwind"],["Pan Flute","woodwind"],
+    ["Synth Lead", "synth"],
+    ["Synth Pad", "synth"],
+    ["Pluck", "synth"],
+    ["Future Synth", "synth"],
+    ["Afro Synth", "synth"],
 
-    ["Marimba","mallet"],["Vibraphone","mallet"],["Xylophone","mallet"],
-    ["Kalimba","mallet"],["Steel Drums","mallet"],["Celesta","mallet"],
-    ["Music Box","mallet"],["Glockenspiel","mallet"],
-
-    ["Acoustic Kit","drums"],["Studio Kit","drums"],["808 Kit","drums"],
-    ["Afro Kit","drums"],["Percussion","drums"],["Kick","drums"],
-    ["Deep Kick","drums"],["Snare","drums"],["Closed Hat","drums"],
-    ["Open Hat","drums"],["Crash","drums"],["Ride","drums"],
-    ["Tom","drums"],["Floor Tom","drums"],
-
-    ["Talking Drum","african"],["Talking Drum High","african"],
-    ["Talking Drum Low","african"],["Djembe","african"],
-    ["Djembe High","african"],["Djembe Low","african"],
-    ["Conga","african"],["Bongo","african"],["Shekere","african"],
-    ["African Bell","african"],["African Percussion","african"],
-    ["Amapiano Log Drum","african"],["Log Drum Deep","african"],
-    ["Log Drum High","african"],
-
-    ["Lead Saw","synth"],["Lead Square","synth"],["Lead Pulse","synth"],
-    ["Synth Brass","synth"],["Synth Bass","synth"],["Warm Pad","synth"],
-    ["Dark Pad","synth"],["Choir Pad","synth"],["Air Pad","synth"],
-    ["Dream Pad","synth"],["Pluck","synth"],["Digital Pluck","synth"],
-    ["Bell Pluck","synth"],["Afro Pluck","synth"],["Trap Pluck","synth"],
-    ["Synth Lead","synth"],["Retro Lead","synth"],["Vapor Lead","synth"],
-    ["House Lead","synth"],["Amapiano Lead","synth"],["Vintage Synth","synth"],
-    ["Analog Bass","synth"],["Mono Synth","synth"],["Poly Synth","synth"],
-
-    ["Choir","vocal"],["Male Choir","vocal"],["Female Choir","vocal"],
-    ["Vocal Ah","vocal"],["Vocal Oo","vocal"],
-
-    ["Harp","other"],["Acoustic Harp","other"],["Banjo","other"],
-    ["Mandolin","other"],["Ukulele","other"],["Bell","other"],
-    ["Church Bells","other"],["Crystal Bell","other"],["Cowbell","other"],
-    ["Agogo","other"],["Guiro","other"],["Cabasa","other"],
-    ["Tambourine","other"],["Woodblock","other"],["Rimshot","other"],
-    ["Clap","other"],["Snap","other"],["Cajon","other"],["Timbale","other"],
-
-    ["Breath","fx"],["Atmosphere","fx"],["Impact","fx"],["Reverse FX","fx"],
-    ["Vinyl FX","fx"],["Tape Stop FX","fx"],["Riser","fx"],
-    ["Downlifter","fx"],["Sub Drop","fx"]
+    ["Flute", "wind"],
+    ["Saxophone", "wind"],
+    ["Trumpet", "wind"],
+    ["Choir", "voice"]
   ];
 
-  const categories = [
-    "all","keys","guitar","bass","strings","brass","woodwind",
-    "mallet","drums","african","synth","vocal","other","fx"
+  const addTrackItems = [
+    ["Voice / Audio", "🎙"],
+    ["Instruments", "🎹"],
+    ["Drum Machine", "🥁"],
+    ["Looper", "🔁"],
+    ["Guitar / Bass", "🎸"],
+    ["Sampler", "◼"],
+    ["Import Audio", "♫"],
+    ["Import MIDI", "MIDI"]
   ];
 
-  const genres = [
-    "Afrobeats","Amapiano","Trap","Drill","Hip-Hop","R&B",
-    "Pop","Dancehall","Reggae","Gospel","EDM","House","Lo-fi"
-  ];
+  let audioCtx = null;
+  let mediaRecorder = null;
+  let recordedChunks = [];
 
-  let audio = null;
-  let master = null;
+  /* =========================================================
+     AUDIO
+     ========================================================= */
 
-  let bpm = 105;
-  let playing = false;
-  let timer = null;
-  let beat = 0;
-
-  let selected = "Piano";
-  let category = "all";
-  let activeTab = "arrange";
-  let octave = 4;
-
-  let tracks = [
-    {
-      name: "Track 1",
-      instrument: "Piano",
-      type: "MIDI"
-    }
-  ];
-
-  let clips = [];
-
-  let recorder = null;
-  let recording = false;
-  let chunks = [];
-
-  function audioStart() {
-    if (!audio) {
-      audio = new (window.AudioContext ||
+  function getAudioContext() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext ||
         window.webkitAudioContext)();
-
-      master = audio.createGain();
-      master.gain.value = 0.8;
-      master.connect(audio.destination);
     }
 
-    if (audio.state === "suspended") {
-      audio.resume();
+    if (audioCtx.state === "suspended") {
+      audioCtx.resume();
     }
+
+    return audioCtx;
   }
 
-  function midiToHz(midi) {
+  function midiToFrequency(midi) {
     return 440 * Math.pow(2, (midi - 69) / 12);
   }
 
-  function playNote(midi, type = "triangle") {
-    audioStart();
+  function playTone(midi, duration = 0.7, type = "triangle") {
+    const ctx = getAudioContext();
 
-    const now = audio.currentTime;
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
 
-    const osc = audio.createOscillator();
-    const gain = audio.createGain();
+    oscillator.type = type;
+    oscillator.frequency.value = midiToFrequency(midi);
 
-    osc.type = type;
-    osc.frequency.value = midiToHz(midi);
-
-    gain.gain.setValueAtTime(0.0001, now);
-
+    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(
-      0.25,
-      now + 0.01
+      0.35,
+      ctx.currentTime + 0.015
     );
 
     gain.gain.exponentialRampToValueAtTime(
       0.0001,
-      now + 0.7
+      ctx.currentTime + duration
     );
 
-    osc.connect(gain);
-    gain.connect(master);
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
 
-    osc.start(now);
-    osc.stop(now + 0.75);
+    oscillator.start();
+    oscillator.stop(ctx.currentTime + duration + 0.05);
   }
 
-  function render() {
-    const filtered = instruments.filter(item =>
-      category === "all" || item[1] === category
+  function playDrum(type) {
+    const ctx = getAudioContext();
+
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    if (type === "kick") {
+      oscillator.frequency.setValueAtTime(120, ctx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(
+        45,
+        ctx.currentTime + 0.12
+      );
+    }
+
+    if (type === "snare") {
+      oscillator.type = "square";
+      oscillator.frequency.value = 180;
+    }
+
+    if (type === "hat") {
+      oscillator.type = "square";
+      oscillator.frequency.value = 7000;
+    }
+
+    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
+      0.4,
+      ctx.currentTime + 0.005
+    );
+    gain.gain.exponentialRampToValueAtTime(
+      0.0001,
+      ctx.currentTime + 0.12
     );
 
-    app.innerHTML = `
-      <div class="sb">
-        <header class="sb-top">
-          <div class="brand">STUDIO<span>BEAT</span></div>
-          <div class="project-name">My First Song</div>
-          <div class="transport">
-            <button id="new">NEW</button>
-            <button id="stop">■</button>
-            <button id="play">${playing ? "❚❚" : "▶"}</button>
-            <button id="record" class="${recording ? "recording" : ""}">●</button>
-            <label>
-              BPM
-              <input id="bpm" type="number" min="40" max="240" value="${bpm}">
-            </label>
-          </div>
-        </header>
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
 
-        <div class="studio-tabs">
-          <button data-tab="arrange">ARRANGE</button>
-          <button data-tab="sounds">SOUNDS</button>
-          <button data-tab="piano">PIANO</button>
-          <button data-tab="looper">LOOPER</button>
-          <button data-tab="recording">RECORD</button>
-          <button data-tab="mixer">MIXER</button>
-          <button data-tab="tools">TOOLS</button>
+    oscillator.start();
+    oscillator.stop(ctx.currentTime + 0.15);
+  }
+
+  /* =========================================================
+     CSS
+     ========================================================= */
+
+  const css = `
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #000;
+      color: #fff;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      color: #fff;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(.97);
+    }
+
+    .sb-app {
+      min-height: 100vh;
+      background: #000;
+      padding-bottom: 30px;
+    }
+
+    .sb-top {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 15px;
+      background: #000;
+      border-bottom: 1px solid #222;
+    }
+
+    .sb-logo {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .sb-top-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      font-size: 20px;
+      background: #111;
+    }
+
+    .sb-content {
+      padding: 18px 15px 40px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .project-title {
+      font-size: 25px;
+      font-weight: 800;
+      margin: 8px 0 4px;
+    }
+
+    .project-subtitle {
+      color: #999;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .transport {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 15px 0 22px;
+    }
+
+    .transport button {
+      width: 48px;
+      height: 42px;
+    }
+
+    .play-main {
+      width: 58px !important;
+      height: 58px !important;
+      border-radius: 50% !important;
+      background: #fff !important;
+      color: #000 !important;
+      border: none !important;
+      font-size: 21px;
+    }
+
+    .bpm-box {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .bpm {
+      padding: 8px 15px;
+      border: 1px solid #333;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    .timeline {
+      position: relative;
+      min-height: 300px;
+      border: 1px solid #222;
+      border-radius: 18px;
+      background:
+        repeating-linear-gradient(
+          to right,
+          #000 0,
+          #000 74px,
+          #151515 75px
+        );
+      overflow: hidden;
+      padding: 16px 0;
+    }
+
+    .timeline-ruler {
+      height: 25px;
+      display: flex;
+      color: #666;
+      font-size: 10px;
+      padding-left: 12px;
+      gap: 53px;
+    }
+
+    .track {
+      height: 72px;
+      margin: 7px 0;
+      border-top: 1px solid #1d1d1d;
+      border-bottom: 1px solid #1d1d1d;
+      display: flex;
+      align-items: center;
+      padding-left: 12px;
+      position: relative;
+    }
+
+    .track-name {
+      width: 110px;
+      flex-shrink: 0;
+      font-size: 12px;
+      color: #ddd;
+    }
+
+    .clip {
+      height: 45px;
+      min-width: 145px;
+      background: #fff;
+      color: #000;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-left: 5px;
+    }
+
+    .empty-timeline {
+      height: 160px;
+      display: grid;
+      place-items: center;
+      color: #666;
+      font-size: 14px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .add-track-btn {
+      width: 100%;
+      height: 58px;
+      margin-top: 16px;
+      border: 1px solid #fff;
+      background: #fff;
+      color: #000;
+      font-weight: 800;
+      font-size: 16px;
+      border-radius: 15px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin: 8px 0 15px;
+    }
+
+    .subtle {
+      color: #888;
+      font-size: 13px;
+    }
+
+    .back-btn {
+      margin-bottom: 18px;
+      padding: 10px 15px;
+      background: #111;
+    }
+
+    .instrument-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .instrument-card {
+      min-height: 72px;
+      text-align: left;
+      padding: 14px;
+      background: #0c0c0c;
+      border: 1px solid #262626;
+      border-radius: 14px;
+    }
+
+    .instrument-card strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .instrument-card span {
+      color: #777;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .instrument-card:active {
+      background: #fff;
+      color: #000;
+    }
+
+    .piano-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .octave-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .octave-controls button {
+      width: 38px;
+      height: 36px;
+    }
+
+    .octave-value {
+      min-width: 45px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .piano-wrap {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 15px;
+    }
+
+    .piano {
+      position: relative;
+      height: 260px;
+      width: 980px;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .white-keys {
+      position: absolute;
+      inset: 0;
+      display: flex;
+    }
+
+    .white-key {
+      flex: 1;
+      min-width: 70px;
+      height: 250px;
+      background: #fff;
+      color: #000;
+      border: 1px solid #aaa;
+      border-radius: 0 0 8px 8px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 15px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .white-key:active {
+      background: #ddd;
+    }
+
+    .black-keys {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 160px;
+      pointer-events: none;
+    }
+
+    .black-key {
+      position: absolute;
+      width: 42px;
+      height: 160px;
+      background: #050505;
+      border: 1px solid #444;
+      border-radius: 0 0 7px 7px;
+      z-index: 5;
+      pointer-events: auto;
+      touch-action: none;
+      box-shadow: 0 3px 5px #000;
+    }
+
+    .black-key:active {
+      background: #333;
+    }
+
+    .piano-tools {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .tool-btn {
+      padding: 13px 5px;
+      font-size: 12px;
+    }
+
+    .tool-btn.active {
+      background: #fff;
+      color: #000;
+    }
+
+    .sheet-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(0,0,0,.72);
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .sheet {
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      background: #0a0a0a;
+      border-radius: 24px 24px 0 0;
+      padding: 20px 15px 30px;
+      border-top: 1px solid #333;
+    }
+
+    .sheet-handle {
+      width: 45px;
+      height: 4px;
+      background: #444;
+      border-radius: 10px;
+      margin: 0 auto 18px;
+    }
+
+    .sheet-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 15px;
+    }
+
+    .add-item {
+      width: 100%;
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 10px 14px;
+      margin: 7px 0;
+      text-align: left;
+      background: #111;
+      border: 1px solid #222;
+    }
+
+    .add-icon {
+      width: 35px;
+      text-align: center;
+      font-size: 20px;
+    }
+
+    .drum-controls {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    .drum-controls button {
+      flex: 1;
+      padding: 12px 5px;
+    }
+
+    .drum-grid {
+      overflow-x: auto;
+      border: 1px solid #222;
+      border-radius: 15px;
+      padding: 12px;
+    }
+
+    .drum-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      min-width: 700px;
+    }
+
+    .drum-name {
+      width: 65px;
+      font-size: 11px;
+      color: #aaa;
+      flex-shrink: 0;
+    }
+
+    .step {
+      width: 31px;
+      height: 38px;
+      margin: 2px;
+      border-radius: 6px;
+      background: #111;
+      border: 1px solid #2a2a2a;
+    }
+
+    .step.active {
+      background: #fff;
+      border-color: #fff;
+    }
+
+    .step.beat {
+      border-color: #555;
+    }
+
+    .loop-grid,
+    .sampler-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .loop-pad,
+    .sample-pad {
+      min-height: 110px;
+      background: #101010;
+      border: 1px solid #292929;
+      border-radius: 16px;
+      padding: 15px;
+      text-align: left;
+    }
+
+    .loop-pad.active,
+    .sample-pad:active {
+      background: #fff;
+      color: #000;
+    }
+
+    .loop-pad strong,
+    .sample-pad strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .record-card {
+      border: 1px solid #292929;
+      border-radius: 18px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .record-button {
+      width: 85px;
+      height: 85px;
+      border-radius: 50%;
+      background: #fff;
+      color: #000;
+      border: 8px solid #222;
+      font-size: 12px;
+      font-weight: 900;
+      margin: 25px auto;
+    }
+
+    .record-button.recording {
+      background: #000;
+      color: #fff;
+      border-color: #fff;
+    }
+
+    .file-box {
+      border: 1px dashed #444;
+      border-radius: 18px;
+      padding: 30px 15px;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .file-box input {
+      display: none;
+    }
+
+    .file-label {
+      display: inline-block;
+      padding: 14px 20px;
+      background: #fff;
+      color: #000;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .guitar-neck {
+      border: 1px solid #333;
+      border-radius: 15px;
+      padding: 15px;
+      background: #111;
+      overflow-x: auto;
+    }
+
+    .string {
+      min-width: 700px;
+      height: 45px;
+      border-bottom: 2px solid #555;
+      display: flex;
+      align-items: center;
+    }
+
+    .fret {
+      min-width: 65px;
+      height: 100%;
+      border-right: 1px solid #333;
+      display: grid;
+      place-items: center;
+      color: #666;
+      font-size: 11px;
+    }
+
+    .fret:active {
+      background: #fff;
+      color: #000;
+    }
+
+    .empty-state {
+      padding: 50px 20px;
+      text-align: center;
+      color: #666;
+    }
+
+    @media (min-width: 700px) {
+      .instrument-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .loop-grid,
+      .sampler-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+  `;
+
+  function injectCSS() {
+    if (document.getElementById("studiobeat-runtime-css")) return;
+
+    const style = document.createElement("style");
+    style.id = "studiobeat-runtime-css";
+    style.textContent = css;
+    document.head.appendChild(style);
+  }
+
+  /* =========================================================
+     HELPERS
+     ========================================================= */
+
+  function escapeHTML(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function go(screen) {
+    state.screen = screen;
+    state.showAddTrack = false;
+    render();
+  }
+
+  function addTrack(name, type) {
+    state.tracks.push({
+      id: Date.now(),
+      name,
+      type
+    });
+
+    state.clips.push({
+      id: Date.now() + 1,
+      name: name + " Track"
+    });
+  }
+
+  /* =========================================================
+     TOP BAR
+     ========================================================= */
+
+  function topBar(back = false) {
+    return `
+      <div class="sb-top">
+
+        <div>
+          ${
+            back
+              ? `<button class="icon-btn" id="backBtn">‹</button>`
+              : `<div class="sb-logo">STUDIOBEAT</div>`
+          }
         </div>
 
-        <main>
-
-          <section class="panel ${activeTab === "arrange" ? "show" : ""}">
-            <div class="panel-title">
-              <b>ARRANGEMENT</b>
-              <span>${bpm} BPM</span>
-            </div>
-
-            <div class="timeline-scroll">
-              <div class="timeline">
-
-                <div class="ruler">
-                  <div class="track-name">TRACKS</div>
-                  ${Array.from(
-                    {length:32},
-                    (_,i)=>`<div>${i + 1}</div>`
-                  ).join("")}
-                </div>
-
-                ${tracks.map((track,index)=>`
-                  <div class="track">
-
-                    <div class="track-info">
-                      <b>${track.name}</b>
-                      <small>${track.instrument}</small>
-                      <button>M</button>
-                      <button>S</button>
-                    </div>
-
-                    <div class="lane">
-                      ${Array.from(
-                        {length:32},
-                        ()=>`<i></i>`
-                      ).join("")}
-
-                      ${clips
-                        .filter(c=>c.track===index)
-                        .map(c=>`
-                          <div
-                            class="clip"
-                            style="
-                              left:${c.start*64}px;
-                              width:${c.length*64}px;
-                            "
-                          >
-                            ${c.name}
-                          </div>
-                        `)
-                        .join("")}
-                    </div>
-
-                  </div>
-                `).join("")}
-
-                <div
-                  id="playhead"
-                  style="left:${130+beat*64}px;"
-                ></div>
-
-              </div>
-            </div>
-
-            <div class="arrangement-buttons">
-              <button id="addTrack">＋ ADD TRACK</button>
-              <button id="addRegion">＋ ADD REGION</button>
-              <button>UNDO</button>
-              <button>REDO</button>
-              <button>SNAP</button>
-              <button>ZOOM</button>
-            </div>
-
-          </section>
-
-          <section class="panel ${activeTab === "sounds" ? "show" : ""}">
-
-            <div class="panel-title">
-              <b>INSTRUMENTS</b>
-              <span>${instruments.length}</span>
-            </div>
-
-            <div class="categories">
-              ${categories.map(c=>`
-                <button
-                  data-category="${c}"
-                  class="${category===c?"selected":""}"
-                >
-                  ${c.toUpperCase()}
-                </button>
-              `).join("")}
-            </div>
-
-            <div class="instrument-grid">
-              ${filtered.map(item=>`
-                <button
-                  class="instrument"
-                  data-instrument="${item[0]}"
-                >
-                  <b>${item[0]}</b>
-                  <small>${item[1]}</small>
-                </button>
-              `).join("")}
-            </div>
-
-          </section>
-
-          <section class="panel ${activeTab === "piano" ? "show" : ""}">
-
-            <div class="panel-title">
-              <b>PIANO</b>
-              <span>${selected}</span>
-            </div>
-
-            <div class="piano-tools">
-              <button id="octDown">OCT −</button>
-              <button id="octUp">OCT ＋</button>
-              <button>SUSTAIN</button>
-              <button>SMART CHORD</button>
-              <button>ARPEGGIATOR</button>
-            </div>
-
-            <div class="keyboard-scroll">
-              <div class="keyboard">
-                ${whiteKeys()}
-                ${blackKeys()}
-              </div>
-            </div>
-
-          </section>
-
-          <section class="panel ${activeTab === "looper" ? "show" : ""}">
-
-            <div class="panel-title">
-              <b>LOOPER</b>
-              <span>PERFORMANCE GRID</span>
-            </div>
-
-            <div class="loop-packs">
-              ${genres.map(g=>`
-                <button>
-                  ${g}
-                  <small>PACK</small>
-                </button>
-              `).join("")}
-            </div>
-
-            <div class="looper-grid">
-              ${[
-                "Drums",
-                "Bass",
-                "Keys",
-                "Guitar",
-                "Percussion",
-                "Log Drum",
-                "Lead",
-                "Vocal",
-                "FX",
-                "Top Loop",
-                "Chord",
-                "Fill"
-              ].map((name,i)=>`
-                <button
-                  class="loop-cell"
-                  data-loop="${i}"
-                >
-                  <b>${name}</b>
-                  <small>LOOP ${i+1}</small>
-                </button>
-              `).join("")}
-            </div>
-
-            <div class="fx-buttons">
-              <button>GATER</button>
-              <button>STUTTER</button>
-              <button>TAPE STOP</button>
-              <button>RECORD LOOP</button>
-            </div>
-
-          </section>
-
-          <section class="panel ${activeTab === "recording" ? "show" : ""}">
-
-            <div class="panel-title">
-              <b>RECORDING STUDIO</b>
-              <span>VOCAL / AUDIO</span>
-            </div>
-
-            <div class="recording-box">
-
-              <button
-                id="micRecord"
-                class="big-record"
-              >
-                ${recording
-                  ? "STOP RECORDING"
-                  : "START RECORDING"}
-              </button>
-
-              <div class="input-meter">
-                <div id="meter"></div>
-              </div>
-
-              <div class="effects">
-                <button>NOISE REDUCTION</button>
-                <button>PITCH CORRECTION</button>
-                <button>VOCAL PRESET</button>
-                <button>EQ</button>
-                <button>COMPRESSION</button>
-                <button>REVERB</button>
-                <button>DELAY</button>
-              </div>
-
-              <div id="recordings"></div>
-
-            </div>
-
-          </section>
-
-          <section class="panel ${activeTab === "mixer" ? "show" : ""}">
-
-            <div class="panel-title">
-              <b>MIXER</b>
-              <span>TRACK MIXING</span>
-            </div>
-
-            <div class="mixer">
-
-              ${tracks.map(track=>`
-                <div class="channel">
-
-                  <b>${track.name}</b>
-                  <small>${track.instrument}</small>
-
-                  <label>
-                    VOLUME
-                    <input
-                      type="range"
-                      min="0"
-                      max="100"
-                      value="80"
-                    >
-                  </label>
-
-                  <label>
-                    PAN
-                    <input
-                      type="range"
-                      min="-100"
-                      max="100"
-                      value="0"
-                    >
-                  </label>
-
-                  <div>
-                    <button>MUTE</button>
-                    <button>SOLO</button>
-                  </div>
-
-                </div>
-              `).join("")}
-
-            </div>
-
-          </section>
-
-          <section class="panel ${activeTab === "tools" ? "show" : ""}">
-
-            <div class="panel-title">
-              <b>STUDIO TOOLS</b>
-            </div>
-
-            <div class="tool-grid">
-              <button>🎸 GUITAR TUNER</button>
-              <button>METRONOME</button>
-              <button>COUNT-IN</button>
-              <button>MASTERING</button>
-              <button>IMPORT AUDIO</button>
-              <button>EXPORT SONG</button>
-              <button>PROJECT SETTINGS</button>
-              <button>MY TRACKS</button>
-            </div>
-
-          </section>
-
-        </main>
-
-        <nav class="bottom-nav">
-
-          <button
-            data-tab="arrange"
-            class="${activeTab==="arrange"?"active":""}"
-          >
-            <b>⌁</b>
-            <span>Arrange</span>
-          </button>
-
-          <button
-            data-tab="sounds"
-            class="${activeTab==="sounds"?"active":""}"
-          >
-            <b>♫</b>
-            <span>Sounds</span>
-          </button>
-
-          <button
-            data-tab="piano"
-            class="${activeTab==="piano"?"active":""}"
-          >
-            <b>▥</b>
-            <span>Piano</span>
-          </button>
-
-          <button
-            data-tab="looper"
-            class="${activeTab==="looper"?"active":""}"
-          >
-            <b>▦</b>
-            <span>Looper</span>
-          </button>
-
-          <button
-            data-tab="mixer"
-            class="${activeTab==="mixer"?"active":""}"
-          >
-            <b>≋</b>
-            <span>Mixer</span>
-          </button>
-
-        </nav>
+        <div class="sb-top-right">
+          <button class="icon-btn" id="saveBtn">✓</button>
+          <button class="icon-btn" id="moreBtn">⋯</button>
+        </div>
 
       </div>
     `;
-
-    bind();
   }
 
-  function whiteKeys() {
-    const notes = [
-      60,62,64,65,67,69,71,
-      72,74,76,77,79,81,83
+  /* =========================================================
+     STUDIO / ARRANGEMENT
+     ========================================================= */
+
+  function studioScreen() {
+    return `
+      ${topBar(false)}
+
+      <main class="sb-content">
+
+        <div class="project-title">My Project</div>
+        <div class="project-subtitle">
+          StudioBeat project
+        </div>
+
+        <div class="transport">
+          <button id="undoBtn">↶</button>
+
+          <button
+            class="play-main"
+            id="playBtn"
+          >
+            ${state.playing ? "■" : "▶"}
+          </button>
+
+          <button id="stopBtn">■</button>
+        </div>
+
+        <div class="bpm-box">
+          <div class="bpm">
+            BPM ${state.bpm}
+          </div>
+        </div>
+
+        <div class="timeline">
+
+          <div class="timeline-ruler">
+            <span>1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+            <span>6</span>
+            <span>7</span>
+            <span>8</span>
+          </div>
+
+          ${
+            state.tracks.length
+              ? state.tracks.map((track, index) => `
+                  <div class="track">
+
+                    <div class="track-name">
+                      ${escapeHTML(track.name)}
+                    </div>
+
+                    ${
+                      state.clips[index]
+                        ? `
+                          <div class="clip">
+                            ${escapeHTML(state.clips[index].name)}
+                          </div>
+                        `
+                        : ""
+                    }
+
+                  </div>
+                `).join("")
+              : `
+                <div class="empty-timeline">
+                  <div>
+                    <strong>No tracks yet</strong><br><br>
+                    Tap + Add Track to start making music.
+                  </div>
+                </div>
+              `
+          }
+
+        </div>
+
+        <button
+          class="add-track-btn"
+          id="addTrackBtn"
+        >
+          ＋ Add Track
+        </button>
+
+      </main>
+    `;
+  }
+
+  /* =========================================================
+     ADD TRACK SHEET
+     ========================================================= */
+
+  function addTrackSheet() {
+    return `
+      <div class="sheet-bg" id="sheetBg">
+
+        <div class="sheet">
+
+          <div class="sheet-handle"></div>
+
+          <div class="sheet-title">
+            Add Track
+          </div>
+
+          ${addTrackItems.map(item => `
+            <button
+              class="add-item"
+              data-add="${escapeHTML(item[0])}"
+            >
+
+              <span class="add-icon">
+                ${item[1]}
+              </span>
+
+              <span>
+                ${escapeHTML(item[0])}
+              </span>
+
+            </button>
+          `).join("")}
+
+        </div>
+      </div>
+    `;
+  }
+
+  /* =========================================================
+     INSTRUMENT LIST
+     ========================================================= */
+
+  function instrumentScreen() {
+    return `
+      ${topBar(true)}
+
+      <main class="sb-content">
+
+        <div class="section-title">
+          Instruments
+        </div>
+
+        <div class="subtle">
+          Choose an instrument
+        </div>
+
+        <br>
+
+        <div class="instrument-grid">
+
+          ${instruments.map(inst => `
+            <button
+              class="instrument-card"
+              data-instrument="${escapeHTML(inst[0])}"
+            >
+
+              <strong>
+                ${escapeHTML(inst[0])}
+              </strong>
+
+              <span>
+                ${escapeHTML(inst[1])}
+              </span>
+
+            </button>
+          `).join("")}
+
+        </div>
+
+      </main>
+    `;
+  }
+
+  /* =========================================================
+     PIANO
+     ========================================================= */
+
+  function pianoScreen() {
+    const whiteNotes = [
+      ["C", 0],
+      ["D", 2],
+      ["E", 4],
+      ["F", 5],
+      ["G", 7],
+      ["A", 9],
+      ["B", 11],
+      ["C", 12],
+      ["D", 14],
+      ["E", 16],
+      ["F", 17],
+      ["G", 19],
+      ["A", 21],
+      ["B", 23]
     ];
 
-    return notes.map(n=>`
-      <button
-        class="white-key"
-        data-midi="${n}"
-      ></button>
-    `).join("");
-  }
-
-  function blackKeys() {
-
-    const keys = [
-      [61,31],
-      [63,77],
-      [66,169],
-      [68,215],
-      [70,261],
-      [73,353],
-      [75,399],
-      [78,491],
-      [80,537],
-      [82,583]
+    const blackNotes = [
+      ["C#", 1, 42],
+      ["D#", 3, 114],
+      ["F#", 6, 257],
+      ["G#", 8, 329],
+      ["A#", 10, 401],
+      ["C#", 13, 544],
+      ["D#", 15, 616],
+      ["F#", 18, 759],
+      ["G#", 20, 831],
+      ["A#", 22, 903]
     ];
 
-    return keys.map(k=>`
-      <button
-        class="black-key"
-        style="left:${k[1]}px"
-        data-midi="${k[0]}"
-      ></button>
-    `).join("");
+    return `
+      ${topBar(true)}
+
+      <main class="sb-content">
+
+        <div class="piano-header">
+
+          <div>
+            <div class="section-title">
+              ${escapeHTML(state.selectedInstrument)}
+            </div>
+
+            <div class="subtle">
+              Piano
+            </div>
+          </div>
+
+          <div class="octave-controls">
+
+            <button id="octDown">
+              −
+            </button>
+
+            <div class="octave-value">
+              Oct ${state.octave}
+            </div>
+
+            <button id="octUp">
+              ＋
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="piano-wrap">
+
+          <div class="piano">
+
+            <div class="white-keys">
+
+              ${whiteNotes.map(note => `
+                <button
+                  class="white-key"
+                  data-midi="${60 + state.octave - 4 + note[1]}"
+                >
+                  ${note[0]}
+                </button>
+              `).join("")}
+
+            </div>
+
+            <div class="black-keys">
+
+              ${blackNotes.map(note => `
+                <button
+                  class="black-key"
+                  style="left:${note[2]}px"
+                  data-midi="${61 + state.octave - 4 + note[1] - 1}"
+                ></button>
+              `).join("")}
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="piano-tools">
+
+          <button class="tool-btn active">
+            Keyboard
+          </button>
+
+          <button class="tool-btn">
+            Chords
+          </button>
+
+          <button class="tool-btn">
+            Arpeggio
+          </button>
+
+          <button class="tool-btn">
+            Sustain
+          </button>
+
+          <button class="tool-btn">
+            Scale
+          </button>
+
+          <button
+            class="tool-btn"
+            id="recordPianoBtn"
+          >
+            ${state.recording ? "Stop" : "Record"}
+          </button>
+
+        </div>
+
+      </main>
+    `;
   }
 
-  function bind() {
+  /* =========================================================
+     DRUM MACHINE
+     ========================================================= */
 
-    document
-      .querySelectorAll("[data-tab]")
-      .forEach(button=>{
+  function drumScreen() {
+    const rows = [
+      ["Kick", "kick"],
+      ["Snare", "snare"],
+      ["Hi-Hat", "hat"],
+      ["Perc", "perc"]
+    ];
 
-        button.onclick=()=>{
+    return `
+      ${topBar(true)}
 
-          activeTab =
-            button.dataset.tab;
+      <main class="sb-content">
 
-          render();
+        <div class="section-title">
+          Drum Machine
+        </div>
 
-        };
+        <div class="subtle">
+          Build your beat
+        </div>
 
-      });
+        <br>
 
-    document
-      .querySelectorAll("[data-category]")
-      .forEach(button=>{
+        <div class="drum-controls">
 
-        button.onclick=()=>{
+          <button id="clearDrums">
+            Clear
+          </button>
 
-          category =
-            button.dataset.category;
+          <button id="demoDrums">
+            Demo Beat
+          </button>
 
-          activeTab="sounds";
+        </div>
 
-          render();
+        <div class="drum-grid">
 
-        };
+          ${rows.map(row => `
+            <div class="drum-row">
 
-      });
+              <div class="drum-name">
+                ${row[0]}
+              </div>
 
-    document
-      .querySelectorAll("[data-instrument]")
-      .forEach(button=>{
+              ${Array.from({ length: 16 }, (_, i) => {
 
-        button.onclick=()=>{
+                const key = row[1] + "_" + i;
+                const active = !!state.drumPattern[key];
 
-          selected =
-            button.dataset.instrument;
+                return `
+                  <button
+                    class="step ${active ? "active" : ""} ${i % 4 === 0 ? "beat" : ""}"
+                    data-drum="${row[1]}"
+                    data-step="${i}"
+                  ></button>
+                `;
 
-          tracks[0].instrument =
-            selected;
+              }).join("")}
 
-          activeTab="piano";
+            </div>
+          `).join("")}
 
-          render();
+        </div>
 
-        };
+      </main>
+    `;
+  }
 
-      });
+  /* =========================================================
+     LOOPER
+     ========================================================= */
 
-    document
-      .querySelectorAll("[data-midi]")
-      .forEach(button=>{
+  function looperScreen() {
+    const loops = [
+      ["Afro Groove", "Afro"],
+      ["Amapiano", "Amapiano"],
+      ["Trap Loop", "Trap"],
+      ["Drill Loop", "Drill"],
+      ["R&B Loop", "R&B"],
+      ["House Loop", "House"],
+      ["Percussion", "Perc"],
+      ["Bass Loop", "Bass"]
+    ];
 
-        button.onpointerdown=()=>{
+    return `
+      ${topBar(true)}
 
-          const midi =
-            Number(button.dataset.midi);
+      <main class="sb-content">
 
-          playNote(midi);
+        <div class="section-title">
+          Looper
+        </div>
 
-        };
+        <div class="subtle">
+          Tap a loop to play it
+        </div>
 
-      });
+        <br>
 
-    const bpmInput =
-      document.getElementById("bpm");
+        <div class="loop-grid">
 
-    if(bpmInput){
+          ${loops.map(loop => `
+            <button
+              class="loop-pad ${
+                state.selectedLoop === loop[0] ? "active" : ""
+              }"
+              data-loop="${escapeHTML(loop[0])}"
+            >
 
-      bpmInput.onchange=event=>{
+              <strong>
+                ${escapeHTML(loop[0])}
+              </strong>
 
-        bpm =
-          Math.max(
-            40,
-            Math.min(
-              240,
-              Number(event.target.value)||105
-            )
-          );
+              <span class="subtle">
+                ${escapeHTML(loop[1])}
+              </span>
 
-      };
+            </button>
+          `).join("")}
 
+        </div>
+
+      </main>
+    `;
+  }
+
+  /* =========================================================
+     VOICE / AUDIO
+     ========================================================= */
+
+  function voiceScreen() {
+    return `
+      ${topBar(true)}
+
+      <main class="sb-content">
+
+        <div class="section-title">
+          Voice / Audio
+        </div>
+
+        <div class="subtle">
+          Record vocals or live audio
+        </div>
+
+        <br>
+
+        <div class="record-card">
+
+          <div>
+            ${
+              state.recording
+                ? "Recording..."
+                : "Ready to record"
+            }
+          </div>
+
+          <button
+            class="record-button ${
+              state.recording ? "recording" : ""
+            }"
+            id="recordBtn"
+          >
+            ${state.recording ? "STOP" : "REC"}
+          </button>
+
+          <div class="subtle">
+            Allow microphone access when requested.
+          </div>
+
+        </div>
+
+        ${
+          state.recordingUrl
+            ? `
+              <div style="margin-top:15px">
+                <audio
+                  controls
+                  src="${state.recordingUrl}"
+                  style="width:100%"
+                ></audio>
+              </div>
+            `
+            : ""
+        }
+
+      </main>
+    `;
+  }
+
+  /* =========================================================
+     SAMPLER
+     ========================================================= */
+
+  function samplerScreen() {
+    const pads = [
+      "Sample 1",
+      "Sample 2",
+      "Sample 3",
+      "Sample 4",
+      "Sample 5",
+      "Sample 6",
+      "Sample 7",
+      "Sample 8"
+    ];
+
+    return `
+      ${topBar(true)}
+
+      <main class="sb-content">
+
+        <div class="section-title">
+          Sampler
+        </div>
+
+        <div class="subtle">
+          Load and trigger samples
+        </div>
+
+        <br>
+
+        <div class="sampler-grid">
+
+          ${pads.map((pad, index) => `
+            <button
+              class="sample-pad"
+              data-sample="${index}"
+            >
+
+              <strong>
+                ${pad}
+              </strong>
+
+              <span class="subtle">
+                Tap to play
+              </span>
+
+            </button>
+          `).join("")}
+
+        </div>
+
+        <div class="file-box">
+
+          <label class="file-label">
+            Load Sample
+
+            <input
+              id="sampleFile"
+              type="file"
+              accept="audio/*"
+            >
+
+          </label>
+
+        </div>
+
+      </main>
+    `;
+  }
+
+  /* =========================================================
+     IMPORT AUDIO
+     ========================================================= */
+
+  function importAudioScreen() {
+    return `
+      ${topBar(true)}
+
+      <main class="sb-content">
+
+        <div class="section-title">
+          Import Audio
+        </div>
+
+        <div class="subtle">
+          Add an audio file to your project.
+        </div>
+
+        <div class="file-box">
+
+          <label class="file-label">
+
+            Choose Audio
+
+            <input
+              id="audioImport"
+              type="file"
+              accept="audio/*"
+            >
+
+          </label>
+
+        </div>
+
+      </main>
+    `;
+  }
+
+  /* =========================================================
+     IMPORT MIDI
+     ========================================================= */
+
+  function importMidiScreen() {
+    return `
+      ${topBar(true)}
+
+      <main class="sb-content">
+
+        <div class="section-title">
+          Import MIDI
+        </div>
+
+        <div class="subtle">
+          Add a MIDI file to your project.
+        </div>
+
+        <div class="file-box">
+
+          <label class="file-label">
+
+            Choose MIDI
+
+            <input
+              id="midiImport"
+              type="file"
+              accept=".mid,.midi,audio/midi"
+            >
+
+          </label>
+
+        </div>
+
+      </main>
+    `;
+  }
+
+  /* =========================================================
+     GUITAR / BASS
+     ========================================================= */
+
+  function guitarScreen() {
+    const strings = 6;
+
+    return `
+      ${topBar(true)}
+
+      <main class="sb-content">
+
+        <div class="section-title">
+          Guitar / Bass
+        </div>
+
+        <div class="subtle">
+          Play notes across the fretboard.
+        </div>
+
+        <br>
+
+        <div class="guitar-neck">
+
+          ${Array.from({ length: strings }, (_, stringIndex) => `
+            <div class="string">
+
+              ${Array.from({ length: 10 }, (_, fret) => `
+                <button
+                  class="fret"
+                  data-fret="${fret}"
+                  data-string="${stringIndex}"
+                >
+                  ${fret}
+                </button>
+              `).join("")}
+
+            </div>
+          `).join("")}
+
+        </div>
+
+      </main>
+    `;
+  }
+
+  /* =========================================================
+     SCREEN RENDERER
+     ========================================================= */
+
+  function render() {
+    injectCSS();
+
+    let html = `<div class="sb-app">`;
+
+    if (state.screen === "studio") {
+      html += studioScreen();
     }
 
-    const playButton =
-      document.getElementById("play");
-
-    if(playButton){
-
-      playButton.onclick=()=>{
-
-        audioStart();
-
-        if(playing) return;
-
-        playing=true;
-        beat=0;
-
-        render();
-
-        timer=setInterval(()=>{
-
-          beat++;
-
-          if(beat>=32){
-            beat=0;
-          }
-
-          const playhead =
-            document.getElementById(
-              "playhead"
-            );
-
-          if(playhead){
-
-            playhead.style.left =
-              (130+beat*64)+"px";
-
-          }
-
-        },60000/bpm/4);
-
-      };
-
+    if (state.screen === "instruments") {
+      html += instrumentScreen();
     }
 
-    const stopButton =
-      document.getElementById("stop");
-
-    if(stopButton){
-
-      stopButton.onclick=()=>{
-
-        playing=false;
-
-        clearInterval(timer);
-
-        timer=null;
-
-        beat=0;
-
-        render();
-
-      };
-
+    if (state.screen === "piano") {
+      html += pianoScreen();
     }
 
-    const recordButton =
-      document.getElementById("record");
-
-    if(recordButton){
-
-      recordButton.onclick=()=>{
-
-        activeTab="recording";
-
-        render();
-
-      };
-
+    if (state.screen === "drums") {
+      html += drumScreen();
     }
 
-    const newButton =
-      document.getElementById("new");
-
-    if(newButton){
-
-      newButton.onclick=()=>{
-
-        tracks=[
-          {
-            name:"Track 1",
-            instrument:"Piano",
-            type:"MIDI"
-          }
-        ];
-
-        clips=[];
-
-        selected="Piano";
-
-        render();
-
-      };
-
+    if (state.screen === "looper") {
+      html += looperScreen();
     }
 
-    const addTrack =
-      document.getElementById("addTrack");
+    if (state.screen === "voice") {
+      html += voiceScreen();
+    }
 
-    if(addTrack){
+    if (state.screen === "sampler") {
+      html += samplerScreen();
+    }
 
-      addTrack.onclick=()=>{
+    if (state.screen === "importAudio") {
+      html += importAudioScreen();
+    }
 
-        tracks.push({
-          name:
-            "Track " +
-            (tracks.length+1),
+    if (state.screen === "importMidi") {
+      html += importMidiScreen();
+    }
 
-          instrument:selected,
+    if (state.screen === "guitar") {
+      html += guitarScreen();
+    }
 
-          type:"MIDI"
+    html += `</div>`;
+
+    if (state.showAddTrack) {
+      html += addTrackSheet();
+    }
+
+    app.innerHTML = html;
+
+    bindEvents();
+  }
+
+  /* =========================================================
+     RECORDING
+     ========================================================= */
+
+  async function startRecording() {
+    try {
+      const stream =
+        await navigator.mediaDevices.getUserMedia({
+          audio: true
+        });
+
+      recordedChunks = [];
+
+      mediaRecorder = new MediaRecorder(stream);
+
+      mediaRecorder.ondataavailable = event => {
+        if (event.data.size > 0) {
+          recordedChunks.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(
+          recordedChunks,
+          { type: "audio/webm" }
+        );
+
+        state.recordingUrl =
+          URL.createObjectURL(blob);
+
+        stream.getTracks().forEach(track => {
+          track.stop();
         });
 
         render();
-
       };
 
+      mediaRecorder.start();
+
+      state.recording = true;
+
+      render();
+
+    } catch (error) {
+      alert(
+        "Microphone access was not allowed."
+      );
+    }
+  }
+
+  function stopRecording() {
+    if (
+      mediaRecorder &&
+      mediaRecorder.state !== "inactive"
+    ) {
+      mediaRecorder.stop();
     }
 
-    const addRegion =
-      document.getElementById("addRegion");
+    state.recording = false;
+    render();
+  }
 
-    if(addRegion){
+  /* =========================================================
+     EVENT BINDING
+     ========================================================= */
 
-      addRegion.onclick=()=>{
+  function bindEvents() {
 
-        clips.push({
+    /* -------------------------
+       BACK
+       ------------------------- */
 
-          track:0,
+    const backBtn =
+      document.getElementById("backBtn");
 
-          start:
-            clips.length*4,
+    if (backBtn) {
+      backBtn.onclick = () => {
+        go("studio");
+      };
+    }
 
-          length:4,
+    /* -------------------------
+       ADD TRACK
+       ------------------------- */
 
-          name:
-            selected+" Region"
+    const addTrackBtn =
+      document.getElementById("addTrackBtn");
 
-        });
-
+    if (addTrackBtn) {
+      addTrackBtn.onclick = () => {
+        state.showAddTrack = true;
         render();
+      };
+    }
+
+    const sheetBg =
+      document.getElementById("sheetBg");
+
+    if (sheetBg) {
+      sheetBg.onclick = event => {
+        if (event.target === sheetBg) {
+          state.showAddTrack = false;
+          render();
+        }
+      };
+    }
+
+    document.querySelectorAll("[data-add]")
+      .forEach(button => {
+
+        button.onclick = () => {
+
+          const type =
+            button.dataset.add;
+
+          state.showAddTrack = false;
+
+          if (type === "Instruments") {
+            go("instruments");
+            return;
+          }
+
+          if (type === "Drum Machine") {
+            addTrack("Drums", "drums");
+            go("drums");
+            return;
+          }
+
+          if (type === "Looper") {
+            addTrack("Looper", "looper");
+            go("looper");
+            return;
+          }
+
+          if (type === "Voice / Audio") {
+            addTrack("Voice", "voice");
+            go("voice");
+            return;
+          }
+
+          if (type === "Guitar / Bass") {
+            addTrack("Guitar", "guitar");
+            go("guitar");
+            return;
+          }
+
+          if (type === "Sampler") {
+            addTrack("Sampler", "sampler");
+            go("sampler");
+            return;
+          }
+
+          if (type === "Import Audio") {
+            go("importAudio");
+            return;
+          }
+
+          if (type === "Import MIDI") {
+            go("importMidi");
+            return;
+          }
+        };
+
+      });
+
+    /* -------------------------
+       INSTRUMENTS
+       ------------------------- */
+
+    document.querySelectorAll(
+      "[data-instrument]"
+    ).forEach(button => {
+
+      button.onclick = () => {
+
+        state.selectedInstrument =
+          button.dataset.instrument;
+
+        addTrack(
+          state.selectedInstrument,
+          "instrument"
+        );
+
+        go("piano");
+      };
+
+    });
+
+    /* -------------------------
+       PIANO KEYS
+       ------------------------- */
+
+    document.querySelectorAll(
+      ".white-key, .black-key"
+    ).forEach(key => {
+
+      const play = event => {
+
+        event.preventDefault();
+
+        const midi =
+          Number(key.dataset.midi);
+
+        playTone(
+          midi,
+          0.8,
+          "triangle"
+        );
 
       };
 
-    }
+      key.addEventListener(
+        "pointerdown",
+        play
+      );
+
+    });
+
+    /* -------------------------
+       OCTAVE
+       ------------------------- */
 
     const octDown =
       document.getElementById("octDown");
 
-    if(octDown){
-
-      octDown.onclick=()=>{
-
-        octave =
-          Math.max(
-            1,
-            octave-1
-          );
-
-        render();
-
-      };
-
-    }
-
     const octUp =
       document.getElementById("octUp");
 
-    if(octUp){
+    if (octDown) {
+      octDown.onclick = () => {
 
-      octUp.onclick=()=>{
-
-        octave =
-          Math.min(
-            7,
-            octave+1
-          );
-
-        render();
+        if (state.octave > 1) {
+          state.octave--;
+          render();
+        }
 
       };
-
     }
 
-    document
-      .querySelectorAll("[data-loop]")
-      .forEach(button=>{
+    if (octUp) {
+      octUp.onclick = () => {
 
-        button.onclick=()=>{
+        if (state.octave < 7) {
+          state.octave++;
+          render();
+        }
 
-          button.classList.toggle("active");
-
-          audioStart();
-
-          playNote(
-            60+
-            Number(
-              button.dataset.loop
-            )*2
-          );
-
-        };
-
-      });
-
-    const micRecord =
-      document.getElementById("micRecord");
-
-    if(micRecord){
-
-      micRecord.onclick =
-        startRecording;
-
+      };
     }
 
-  }
+    /* -------------------------
+       PIANO RECORD
+       ------------------------- */
 
-  async function startRecording() {
-
-    if(recording){
-
-      if(recorder){
-        recorder.stop();
-      }
-
-      recording=false;
-
-      render();
-
-      return;
-    }
-
-    if(
-      !navigator.mediaDevices ||
-      !navigator.mediaDevices.getUserMedia
-    ){
-
-      alert(
-        "Microphone recording is not available here."
+    const recordPianoBtn =
+      document.getElementById(
+        "recordPianoBtn"
       );
 
-      return;
-    }
+    if (recordPianoBtn) {
 
-    try{
+      recordPianoBtn.onclick = () => {
 
-      const stream =
-        await navigator.mediaDevices
-          .getUserMedia({
-            audio:true
-          });
-
-      chunks=[];
-
-      recorder =
-        new MediaRecorder(stream);
-
-      recorder.ondataavailable =
-        event=>{
-
-          if(event.data.size){
-            chunks.push(event.data);
-          }
-
-        };
-
-      recorder.onstop=()=>{
-
-        stream
-          .getTracks()
-          .forEach(
-            track=>track.stop()
-          );
-
-        const blob =
-          new Blob(
-            chunks,
-            {type:"audio/webm"}
-          );
-
-        const url =
-          URL.createObjectURL(blob);
-
-        const box =
-          document.getElementById(
-            "recordings"
-          );
-
-        if(box){
-
-          box.innerHTML+=`
-
-            <div class="recording-file">
-
-              <audio
-                controls
-                src="${url}"
-              ></audio>
-
-              <a
-                href="${url}"
-                download="StudioBeat-recording.webm"
-              >
-                SAVE RECORDING
-              </a>
-
-            </div>
-
-          `;
-
+        if (state.recording) {
+          stopRecording();
+        } else {
+          startRecording();
         }
 
       };
 
-      recorder.start();
+    }
 
-      recording=true;
+    /* -------------------------
+       DRUM STEPS
+       ------------------------- */
 
-      render();
+    document.querySelectorAll(
+      "[data-drum]"
+    ).forEach(button => {
 
-    }catch(error){
+      button.onclick = () => {
 
-      alert(
-        "Microphone permission is required."
+        const drum =
+          button.dataset.drum;
+
+        const step =
+          button.dataset.step;
+
+        const key =
+          drum + "_" + step;
+
+        state.drumPattern[key] =
+          !state.drumPattern[key];
+
+        if (state.drumPattern[key]) {
+          playDrum(drum);
+        }
+
+        render();
+      };
+
+    });
+
+    /* -------------------------
+       CLEAR DRUMS
+       ------------------------- */
+
+    const clearDrums =
+      document.getElementById(
+        "clearDrums"
       );
+
+    if (clearDrums) {
+
+      clearDrums.onclick = () => {
+
+        state.drumPattern = {};
+
+        render();
+
+      };
 
     }
 
+    /* -------------------------
+       DEMO DRUMS
+       ------------------------- */
+
+    const demoDrums =
+      document.getElementById(
+        "demoDrums"
+      );
+
+    if (demoDrums) {
+
+      demoDrums.onclick = () => {
+
+        state.drumPattern = {};
+
+        [0, 4, 8, 12].forEach(i => {
+          state.drumPattern[
+            "kick_" + i
+          ] = true;
+        });
+
+        [4, 12].forEach(i => {
+          state.drumPattern[
+            "snare_" + i
+          ] = true;
+        });
+
+        [2, 6, 10, 14].forEach(i => {
+          state.drumPattern[
+            "hat_" + i
+          ] = true;
+        });
+
+        render();
+
+      };
+
+    }
+
+    /* -------------------------
+       LOOPS
+       ------------------------- */
+
+    document.querySelectorAll(
+      "[data-loop]"
+    ).forEach(button => {
+
+      button.onclick = () => {
+
+        state.selectedLoop =
+          button.dataset.loop;
+
+        playTone(
+          48,
+          0.7,
+          "sawtooth"
+        );
+
+        render();
+
+      };
+
+    });
+
+    /* -------------------------
+       SAMPLE PADS
+       ------------------------- */
+
+    document.querySelectorAll(
+      "[data-sample]"
+    ).forEach(button => {
+
+      button.onclick = () => {
+
+        const index =
+          Number(button.dataset.sample);
+
+        playTone(
+          48 + index * 3,
+          0.4,
+          "square"
+        );
+
+      };
+
+    });
+
+    /* -------------------------
+       SAMPLE FILE
+       ------------------------- */
+
+    const sampleFile =
+      document.getElementById(
+        "sampleFile"
+      );
+
+    if (sampleFile) {
+
+      sampleFile.onchange = event => {
+
+        const file =
+          event.target.files[0];
+
+        if (file) {
+          alert(
+            file.name +
+            " loaded into StudioBeat."
+          );
+        }
+
+      };
+
+    }
+
+    /* -------------------------
+       VOICE RECORD
+       ------------------------- */
+
+    const recordBtn =
+      document.getElementById(
+        "recordBtn"
+      );
+
+    if (recordBtn) {
+
+      recordBtn.onclick = () => {
+
+        if (state.recording) {
+          stopRecording();
+        } else {
+          startRecording();
+        }
+
+      };
+
+    }
+
+    /* -------------------------
+       AUDIO IMPORT
+       ------------------------- */
+
+    const audioImport =
+      document.getElementById(
+        "audioImport"
+      );
+
+    if (audioImport) {
+
+      audioImport.onchange = event => {
+
+        const file =
+          event.target.files[0];
+
+        if (!file) return;
+
+        addTrack(
+          file.name,
+          "audio"
+        );
+
+        alert(
+          file.name +
+          " added to your project."
+        );
+
+        go("studio");
+
+      };
+
+    }
+
+    /* -------------------------
+       MIDI IMPORT
+       ------------------------- */
+
+    const midiImport =
+      document.getElementById(
+        "midiImport"
+      );
+
+    if (midiImport) {
+
+      midiImport.onchange = event => {
+
+        const file =
+          event.target.files[0];
+
+        if (!file) return;
+
+        addTrack(
+          file.name,
+          "midi"
+        );
+
+        alert(
+          file.name +
+          " added to your project."
+        );
+
+        go("studio");
+
+      };
+
+    }
+
+    /* -------------------------
+       GUITAR / BASS
+       ------------------------- */
+
+    document.querySelectorAll(
+      "[data-fret]"
+    ).forEach(button => {
+
+      button.onclick = () => {
+
+        const fret =
+          Number(button.dataset.fret);
+
+        const string =
+          Number(button.dataset.string);
+
+        const base =
+          40 + (5 - string) * 5;
+
+        playTone(
+          base + fret,
+          0.7,
+          "triangle"
+        );
+
+      };
+
+    });
+
+    /* -------------------------
+       PLAY
+       ------------------------- */
+
+    const playBtn =
+      document.getElementById(
+        "playBtn"
+      );
+
+    if (playBtn) {
+
+      playBtn.onclick = () => {
+
+        state.playing =
+          !state.playing;
+
+        render();
+
+      };
+
+    }
+
+    /* -------------------------
+       STOP
+       ------------------------- */
+
+    const stopBtn =
+      document.getElementById(
+        "stopBtn"
+      );
+
+    if (stopBtn) {
+
+      stopBtn.onclick = () => {
+
+        state.playing = false;
+
+        render();
+
+      };
+
+    }
+
+    /* -------------------------
+       UNDO
+       ------------------------- */
+
+    const undoBtn =
+      document.getElementById(
+        "undoBtn"
+      );
+
+    if (undoBtn) {
+
+      undoBtn.onclick = () => {
+
+        if (state.tracks.length) {
+          state.tracks.pop();
+        }
+
+        if (state.clips.length) {
+          state.clips.pop();
+        }
+
+        render();
+
+      };
+
+    }
+
+    /* -------------------------
+       SAVE
+       ------------------------- */
+
+    const saveBtn =
+      document.getElementById(
+        "saveBtn"
+      );
+
+    if (saveBtn) {
+
+      saveBtn.onclick = () => {
+
+        localStorage.setItem(
+          "studiobeat_state",
+          JSON.stringify({
+            tracks: state.tracks,
+            clips: state.clips,
+            bpm: state.bpm
+          })
+        );
+
+        alert(
+          "StudioBeat project saved."
+        );
+
+      };
+
+    }
+
+    /* -------------------------
+       MORE
+       ------------------------- */
+
+    const moreBtn =
+      document.getElementById(
+        "moreBtn"
+      );
+
+    if (moreBtn) {
+
+      moreBtn.onclick = () => {
+
+        alert(
+          "StudioBeat\n\n" +
+          "Project Settings\n" +
+          "Tempo: " + state.bpm + " BPM\n" +
+          "Tracks: " + state.tracks.length
+        );
+
+      };
+
+    }
   }
 
- render();
+  /* =========================================================
+     LOAD SAVED PROJECT
+     ========================================================= */
+
+  try {
+
+    const saved =
+      localStorage.getItem(
+        "studiobeat_state"
+      );
+
+    if (saved) {
+
+      const data =
+        JSON.parse(saved);
+
+      if (Array.isArray(data.tracks)) {
+        state.tracks = data.tracks;
+      }
+
+      if (Array.isArray(data.clips)) {
+        state.clips = data.clips;
+      }
+
+      if (typeof data.bpm === "number") {
+        state.bpm = data.bpm;
+      }
+
+    }
+
+  } catch (error) {
+    console.log(
+      "No saved StudioBeat project."
+    );
+  }
+
+  /* =========================================================
+     START
+     ========================================================= */
+
+  render();
 
 })();
